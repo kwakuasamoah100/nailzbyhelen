@@ -1,0 +1,19 @@
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #F9F6F0;
+}
+::-webkit-scrollbar-thumb {
+    background: #E8D5C1;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #F48B9B;
+}
+
+/* Modal fade animations */
+#catalogModal, #bookingModal {
+    transition: opacity 0.3s ease-in-out;
+}

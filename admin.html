@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Management Portal | Nailz by Helen</title>
+    
+    <!-- Google Fonts & Tailwind -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-stone-100 text-stone-800 font-sans min-h-screen">
+
+    <!-- Passcode Authentication Lock Modal -->
+    <div id="authOverlay" class="fixed inset-0 z-50 bg-stone-900/90 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl text-center border border-stone-200">
+            <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h2 class="font-serif text-3xl text-stone-900 mb-1">Helen's Admin Portal</h2>
+            <p class="text-xs text-stone-500 mb-6">Enter the passcode to manage website slideshows and catalogs.</p>
+
+            <form onsubmit="verifyAdminPasscode(event)" class="space-y-4">
+                <input type="password" id="adminPasscode" placeholder="Enter Security Code" required class="w-full text-center px-4 py-3 text-lg tracking-widest rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-rose-400">
+                <p id="authError" class="text-xs text-rose-500 hidden font-medium">Incorrect passcode. Access Denied.</p>
+                <button type="submit" class="w-full bg-stone-900 text-white hover:bg-rose-600 py-3.5 rounded-xl text-xs uppercase tracking-widest transition">
+                    Unlock Portal
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Protected Admin Dashboard Header -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div>
+                <h1 class="font-serif text-2xl text-stone-900 font-semibold">Nailz by Helen Admin</h1>
+                <p class="text-xs text-stone-500">Live Gallery & Hero Slideshow Manager</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="index.html" target="_blank" class="text-xs text-stone-600 hover:text-stone-900 flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> View Live Site
+                </a>
+                <button onclick="lockPortal()" class="text-xs bg-stone-200 hover:bg-stone-300 text-stone-800 px-3.5 py-2 rounded-lg transition">
+                    <i class="fa-solid fa-lock"></i> Lock Portal
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Body Content -->
+    <main class="max-w-7xl mx-auto px-6 py-10">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Upload Form -->
+            <div class="lg:col-span-1 bg-white p-6 rounded-2xl border border-stone-200 shadow-sm h-fit">
+                <h2 class="font-serif text-xl text-stone-900 mb-4 pb-2 border-b border-stone-100">Add New Style Image</h2>
+                
+                <form onsubmit="handleAdminUpload(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-stone-500 mb-1">Category</label>
+                        <select id="uploadCategory" required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-stone-400 outline-none">
+                            <option value="Nails">Nails Collection</option>
+                            <option value="Lashes">Lashes Collection</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-stone-500 mb-1">Title / Style Name</label>
+                        <input type="text" id="uploadTitle" placeholder="e.g. Classic Cat Eye Lash" required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-stone-400 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-stone-500 mb-1">Image URL</label>
+                        <input type="url" id="uploadUrl" placeholder="https://..." required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-stone-400 outline-none">
+                    </div>
+
+                    <button type="submit" class="w-full bg-stone-900 hover:bg-rose-600 text-white text-xs uppercase tracking-widest py-3 rounded-xl transition shadow">
+                        Publish to Website
+                    </button>
+                </form>
+            </div>
+
+            <!-- Current Images Management Grid -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-serif text-2xl text-stone-900">Nails Collection</h3>
+                        <span id="nailsCount" class="text-xs bg-stone-100 text-stone-600 px-3 py-1 rounded-full">0 styles</span>
+                    </div>
+                    <div id="adminNailsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="font-serif text-2xl text-stone-900">Lashes Collection</h3>
+                        <span id="lashesCount" class="text-xs bg-stone-100 text-stone-600 px-3 py-1 rounded-full">0 styles</span>
+                    </div>
+                    <div id="adminLashesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script src="admin.js"></script>
+</body>
+</html>
