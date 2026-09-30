@@ -1,427 +1,136 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nailz by Helen | Luxury Nail & Lash Studio</title>
+    <title>Nailz by Helen | Luxury Nail & Lash Artistry</title>
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts & Tailwind -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        vanilla: {
-                            50: '#FCFBF7',
-                            100: '#F9F6F0',
-                            200: '#F3EDE2',
-                            300: '#E8DCCB',
-                        },
-                        blush: {
-                            50: '#FFF5F6',
-                            100: '#FFEBEE',
-                            200: '#FFD6DC',
-                            300: '#FBB3BD',
-                            400: '#F48B9B',
-                            500: '#E06277',
-                        },
-                        warmnude: {
-                            50: '#FAF6F0',
-                            100: '#F3E8DB',
-                            200: '#E8D5C1',
-                            300: '#DABFA7',
-                            400: '#C8A689',
-                            500: '#B08A6B',
-                        }
-                    },
-                    fontFamily: {
-                        serif: ['"Cormorant Garamond"', 'serif'],
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        script: ['"Alex Brush"', 'cursive'],
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-vanilla-50 text-stone-800 font-sans antialiased selection:bg-blush-200 selection:text-stone-900">
+<body class="bg-stone-50 text-stone-800 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- Header Navigation -->
-    <header class="fixed top-0 left-0 right-0 z-40 bg-vanilla-50/90 backdrop-blur-md border-b border-warmnude-100/60 transition-all duration-300">
+    <!-- Navigation Header -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-stone-200/60 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             
-            <a href="#" class="group text-left">
-                <span class="block font-serif text-2xl tracking-widest text-stone-900 uppercase group-hover:text-blush-500 transition">Nailz by Helen</span>
-                <span class="block font-script text-blush-400 text-sm -mt-1 font-normal">Lashes & Nails Elegance</span>
+            <!-- Navbar Brand Logo -->
+            <a href="index.html" class="brand-logo-nav">
+                <span class="brand-dark">Nailz</span><span class="brand-pink">by Helen</span>
             </a>
 
-            <!-- Desktop Nav -->
-            <nav class="hidden md:flex items-center space-x-10 text-sm font-medium tracking-wide">
-                <a href="#hero" class="hover:text-blush-500 transition">Home</a>
-                <a href="#training" class="hover:text-blush-500 transition">1-on-1 Training</a>
-                <a href="#contact" class="hover:text-blush-500 transition">Contact Us</a>
-                <a href="admin.html" target="_blank" class="text-stone-400 hover:text-stone-700 transition text-xs flex items-center gap-1">
-                    <i class="fa-solid fa-lock text-[10px]"></i> Admin Portal
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-600">
+                <a href="#hero" class="hover:text-stone-900 transition">Home</a>
+                <a href="#services" class="hover:text-stone-900 transition">Services</a>
+                <a href="#training" class="hover:text-stone-900 transition">1-on-1 Training</a>
+                <a href="#contact" class="hover:text-stone-900 transition">Contact Us</a>
+                <a href="admin.html" class="hover:text-rose-500 transition flex items-center gap-1.5 text-stone-400">
+                    <i class="fa-solid fa-lock text-xs"></i> Admin Portal
                 </a>
             </nav>
 
-            <button onclick="openBookingModal()" class="hidden md:inline-flex items-center gap-2 bg-stone-900 hover:bg-blush-500 text-white text-xs uppercase tracking-widest px-6 py-3 rounded-full transition-all duration-300 shadow-sm hover:shadow-md">
-                <i class="fa-regular fa-calendar-check"></i>
-                Book a Slot
-            </button>
-
-            <!-- Mobile Menu Toggle Button -->
-            <button onclick="toggleMobileMenu()" class="md:hidden text-stone-700 hover:text-stone-900 p-2">
-                <i class="fa-solid fa-bars text-xl"></i>
-            </button>
-        </div>
-
-        <!-- Mobile Navigation Menu -->
-        <div id="mobileMenu" class="hidden md:hidden bg-vanilla-50 border-b border-warmnude-100 px-6 py-4 space-y-3 text-sm">
-            <a href="#hero" onclick="toggleMobileMenu()" class="block py-2">Home</a>
-            <a href="#training" onclick="toggleMobileMenu()" class="block py-2">1-on-1 Training</a>
-            <a href="#contact" onclick="toggleMobileMenu()" class="block py-2">Contact Us</a>
-            <a href="admin.html" target="_blank" class="block py-2 text-stone-500"><i class="fa-solid fa-lock text-xs"></i> Admin Portal</a>
-            <button onclick="toggleMobileMenu(); openBookingModal();" class="w-full mt-2 bg-stone-900 text-white text-xs uppercase tracking-widest py-3 rounded-full">
-                Book a Slot
-            </button>
+            <!-- CTA Button -->
+            <div>
+                <a href="#booking" class="bg-stone-900 hover:bg-rose-600 text-white text-xs uppercase tracking-widest px-5 py-3 rounded-full transition shadow-md">
+                    Book a Slot
+                </a>
+            </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="pt-20">
-        
-        <!-- Hero Section -->
-        <section id="hero" class="relative min-h-[90vh] flex flex-col justify-center px-6 py-12 max-w-7xl mx-auto">
+    <!-- Hero Section -->
+    <section id="hero" class="py-16 md:py-24 text-center px-4 bg-gradient-to-b from-stone-50 via-rose-50/30 to-stone-50">
+        <div class="max-w-4xl mx-auto space-y-4">
             
-            <div class="text-center max-w-3xl mx-auto mb-10 pt-6">
-                <p class="font-script text-blush-400 text-3xl md:text-4xl mb-1">Luxury Beauty Experience</p>
-                <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-stone-900 tracking-tight font-light leading-none mb-4">
-                    Nailz by Helen
-                </h1>
-                <p class="text-stone-600 text-sm md:text-base font-light tracking-wide max-w-xl mx-auto">
-                    Click any hero card below to view full catalogues. Book bespoke nail art and eyelash enhancements.
-                </p>
-            </div>
+            <span class="text-xs uppercase tracking-widest text-rose-500 bg-rose-100/60 px-4 py-1.5 rounded-full font-semibold">
+                Luxury Beauty Experience
+            </span>
 
-            <!-- Dual Split Hero Slideshow Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 max-w-5xl mx-auto w-full">
-                
-                <!-- NAILS CARD -->
-                <div onclick="openCatalogModal('nails')" class="group cursor-pointer relative h-[420px] md:h-[480px] rounded-3xl overflow-hidden shadow-xl border border-warmnude-100 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl">
-                    <img id="hero-nails-img" src="" alt="Nails Collection" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
-                    
-                    <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-900/20 to-transparent"></div>
-                    
-                    <div class="absolute top-4 right-4 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider text-stone-800 font-medium flex items-center gap-1.5 shadow-sm group-hover:bg-blush-500 group-hover:text-white transition">
-                        <span>View Catalog</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                    </div>
+            <!-- Main Hero Two-Tone Title -->
+            <h1 class="brand-logo-large pt-2">
+                <span class="brand-dark">Nailz</span><span class="brand-pink">by Helen</span>
+            </h1>
 
-                    <div class="absolute bottom-6 left-6 right-6 text-white">
-                        <span class="text-xs uppercase tracking-widest text-blush-200 font-medium block mb-1">Artistry & Extensions</span>
-                        <h2 class="font-serif text-3xl md:text-4xl font-light">Nails Collection</h2>
-                        <p class="text-xs text-stone-300 font-light mt-1 flex items-center gap-2">
-                            <span>Tap to view full gallery</span> &bull; 
-                            <span id="nails-count-badge">0 Styles</span>
-                        </p>
-                    </div>
+            <p class="text-stone-500 text-sm md:text-base max-w-lg mx-auto font-light leading-relaxed">
+                Understated, lightweight aesthetics with handcrafted precision. Click any hero card below to view full catalogues.
+            </p>
+        </div>
+
+        <!-- Catalog Gallery Grid -->
+        <div id="services" class="max-w-6xl mx-auto mt-12 grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
+            
+            <!-- Nails Card -->
+            <div onclick="openCatalog('Nails')" class="group relative rounded-3xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition duration-500 border border-stone-200/80 bg-white">
+                <div class="h-80 bg-stone-200 overflow-hidden relative">
+                    <img id="heroNailsImg" src="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1000&auto=format&fit=crop" alt="Nail Art" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-stone-900/20 to-transparent"></div>
                 </div>
-
-                <!-- LASHES CARD -->
-                <div onclick="openCatalogModal('lashes')" class="group cursor-pointer relative h-[420px] md:h-[480px] rounded-3xl overflow-hidden shadow-xl border border-warmnude-100 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl">
-                    <img id="hero-lashes-img" src="" alt="Lashes Collection" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
-                    
-                    <div class="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-900/20 to-transparent"></div>
-                    
-                    <div class="absolute top-4 right-4 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-full text-[11px] uppercase tracking-wider text-stone-800 font-medium flex items-center gap-1.5 shadow-sm group-hover:bg-blush-500 group-hover:text-white transition">
-                        <span>View Catalog</span>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                    </div>
-
-                    <div class="absolute bottom-6 left-6 right-6 text-white">
-                        <span class="text-xs uppercase tracking-widest text-blush-200 font-medium block mb-1">Volume & Natural Extensions</span>
-                        <h2 class="font-serif text-3xl md:text-4xl font-light">Lashes Collection</h2>
-                        <p class="text-xs text-stone-300 font-light mt-1 flex items-center gap-2">
-                            <span>Tap to view full gallery</span> &bull; 
-                            <span id="lashes-count-badge">0 Styles</span>
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Global Action Bar -->
-            <div class="mt-12 flex flex-wrap justify-center gap-4">
-                <button onclick="openBookingModal()" class="bg-stone-900 text-white hover:bg-blush-500 text-xs uppercase tracking-widest px-8 py-4 rounded-full transition shadow-md">
-                    Book an Appointment
-                </button>
-                <a href="#training" class="bg-white/80 backdrop-blur-md text-stone-800 hover:bg-warmnude-100 border border-warmnude-200 text-xs uppercase tracking-widest px-8 py-4 rounded-full transition">
-                    Explore 1-on-1 Training
-                </a>
-            </div>
-
-        </section>
-
-        <!-- 1-on-1 Training Section -->
-        <section id="training" class="py-20 px-6 bg-vanilla-100 border-y border-warmnude-100">
-            <div class="max-w-6xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="absolute bottom-6 left-6 right-6 text-left text-white flex justify-between items-end">
                     <div>
-                        <span class="font-script text-blush-400 text-3xl block mb-1">Private Mentorship</span>
-                        <h2 class="font-serif text-4xl md:text-5xl text-stone-900 font-light mb-6">1-on-1 Masterclass Training</h2>
-                        <p class="text-stone-600 mb-6 font-light leading-relaxed">
-                            Elevate your beauty career with individualized masterclasses taught directly by Helen. Learn advanced nail artistry techniques, safe lash extensions, client retention, and studio management.
-                        </p>
-                        
-                        <div class="space-y-4 mb-8">
-                            <div class="flex items-start gap-3">
-                                <div class="w-6 h-6 rounded-full bg-blush-100 text-blush-500 flex items-center justify-center text-xs mt-1">
-                                    <i class="fa-solid fa-check"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-stone-900 font-medium text-sm">Full Practical Kit Included</h3>
-                                    <p class="text-stone-500 text-xs">Professional tools, gels, lash trays, and lamps provided.</p>
-                                </div>
-                            </div>
-
-                            <div class="flex items-start gap-3">
-                                <div class="w-6 h-6 rounded-full bg-blush-100 text-blush-500 flex items-center justify-center text-xs mt-1">
-                                    <i class="fa-solid fa-check"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-stone-900 font-medium text-sm">Certification & Mentorship</h3>
-                                    <p class="text-stone-500 text-xs">Receive Helen's accredited certificate and 6 months of ongoing mentorship.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button onclick="openBookingModal('1-on-1 Training Session')" class="bg-stone-900 text-white hover:bg-blush-500 text-xs uppercase tracking-widest px-8 py-3.5 rounded-full transition shadow">
-                            Apply for Masterclass
-                        </button>
+                        <span class="text-xs uppercase tracking-wider text-rose-200 font-medium">Signature Service</span>
+                        <h3 class="font-serif text-2xl font-semibold mt-0.5">Custom Nails & Extensions</h3>
                     </div>
-
-                    <div class="relative">
-                        <div class="aspect-4/5 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-                            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=900" alt="1-on-1 Training" class="w-full h-full object-cover">
-                        </div>
-                        <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl max-w-xs border border-warmnude-100 hidden sm:block">
-                            <p class="font-serif text-2xl text-stone-900 font-light">Flexible Dates</p>
-                            <p class="text-xs text-stone-500 mt-1">Tailored around your schedule with weekend or weekday intensive options.</p>
-                        </div>
-                    </div>
+                    <span class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-xs font-medium border border-white/30 group-hover:bg-white group-hover:text-stone-900 transition duration-300">
+                        View Catalog <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </span>
                 </div>
             </div>
-        </section>
 
-        <!-- Warm Nude Bottom & Contact Section -->
-        <section id="contact" class="bg-gradient-to-b from-vanilla-100 via-warmnude-100 to-warmnude-200 py-24 px-6 border-t border-warmnude-200">
-            <div class="max-w-5xl mx-auto">
-                <div class="text-center max-w-xl mx-auto mb-16">
-                    <span class="font-script text-blush-500 text-3xl">Get In Touch</span>
-                    <h2 class="font-serif text-4xl md:text-5xl text-stone-900 font-light mt-1">Contact Us</h2>
-                    <p class="text-stone-600 text-sm font-light mt-2">Reach out directly via phone, WhatsApp, or socials for inquiries and bookings.</p>
+            <!-- Lashes Card -->
+            <div onclick="openCatalog('Lashes')" class="group relative rounded-3xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition duration-500 border border-stone-200/80 bg-white">
+                <div class="h-80 bg-stone-200 overflow-hidden relative">
+                    <img id="heroLashesImg" src="https://images.unsplash.com/photo-1583001809873-a1284d563372?q=80&w=1000&auto=format&fit=crop" alt="Lash Extensions" class="w-full h-full object-cover group-hover:scale-105 transition duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-stone-900/70 via-stone-900/20 to-transparent"></div>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-                    
-                    <!-- Direct Calls & Messaging Card -->
-                    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-8 border border-white/60 shadow-lg flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-serif text-2xl text-stone-900 font-light mb-6">Direct Channels</h3>
-                            
-                            <div class="space-y-6">
-                                <a href="tel:0502971399" class="flex items-center gap-4 group">
-                                    <div class="w-12 h-12 rounded-full bg-blush-100 text-blush-500 flex items-center justify-center text-lg group-hover:bg-blush-500 group-hover:text-white transition">
-                                        <i class="fa-solid fa-phone"></i>
-                                    </div>
-                                    <div>
-                                        <span class="block text-xs uppercase tracking-wider text-stone-400 font-medium">Direct Call</span>
-                                        <span class="font-medium text-stone-800 text-lg group-hover:text-blush-500 transition">050 297 1399</span>
-                                    </div>
-                                </a>
-
-                                <a href="https://wa.me/233547900382" target="_blank" class="flex items-center gap-4 group">
-                                    <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg group-hover:bg-emerald-600 group-hover:text-white transition">
-                                        <i class="fa-brands fa-whatsapp"></i>
-                                    </div>
-                                    <div>
-                                        <span class="block text-xs uppercase tracking-wider text-stone-400 font-medium">WhatsApp Booking</span>
-                                        <span class="font-medium text-stone-800 text-lg group-hover:text-emerald-600 transition">054 790 0382</span>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="mt-8 pt-6 border-t border-warmnude-100">
-                            <button onclick="openBookingModal()" class="w-full bg-stone-900 text-white hover:bg-blush-500 text-xs uppercase tracking-widest py-3.5 rounded-full transition shadow">
-                                Book Slot Online
-                            </button>
-                        </div>
+                <div class="absolute bottom-6 left-6 right-6 text-left text-white flex justify-between items-end">
+                    <div>
+                        <span class="text-xs uppercase tracking-wider text-rose-200 font-medium">Eyelash Extensions</span>
+                        <h3 class="font-serif text-2xl font-semibold mt-0.5">Wispy & Natural Lash Sets</h3>
                     </div>
-
-                    <!-- Social Handles Card -->
-                    <div class="bg-white/80 backdrop-blur-md rounded-3xl p-8 border border-white/60 shadow-lg flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-serif text-2xl text-stone-900 font-light mb-6">Social Media</h3>
-                            
-                            <div class="space-y-4">
-                                <a href="https://instagram.com/Nailzby.helen" target="_blank" class="flex items-center justify-between p-3.5 rounded-2xl bg-vanilla-50/70 hover:bg-blush-50 transition border border-warmnude-100 group">
-                                    <div class="flex items-center gap-3">
-                                        <i class="fa-brands fa-instagram text-xl text-pink-600"></i>
-                                        <div>
-                                            <span class="block text-xs text-stone-400">Instagram</span>
-                                            <span class="text-sm font-medium text-stone-800 group-hover:text-blush-500">Nailzby.helen</span>
-                                        </div>
-                                    </div>
-                                    <i class="fa-solid fa-arrow-right text-xs text-stone-400 group-hover:translate-x-1 transition"></i>
-                                </a>
-
-                                <a href="https://tiktok.com/@helen_ewurama" target="_blank" class="flex items-center justify-between p-3.5 rounded-2xl bg-vanilla-50/70 hover:bg-blush-50 transition border border-warmnude-100 group">
-                                    <div class="flex items-center gap-3">
-                                        <i class="fa-brands fa-tiktok text-xl text-stone-900"></i>
-                                        <div>
-                                            <span class="block text-xs text-stone-400">TikTok</span>
-                                            <span class="text-sm font-medium text-stone-800 group-hover:text-blush-500">helen_ewurama</span>
-                                        </div>
-                                    </div>
-                                    <i class="fa-solid fa-arrow-right text-xs text-stone-400 group-hover:translate-x-1 transition"></i>
-                                </a>
-
-                                <a href="https://snapchat.com/add/helen_ewurama" target="_blank" class="flex items-center justify-between p-3.5 rounded-2xl bg-vanilla-50/70 hover:bg-blush-50 transition border border-warmnude-100 group">
-                                    <div class="flex items-center gap-3">
-                                        <i class="fa-brands fa-snapchat text-xl text-amber-500"></i>
-                                        <div>
-                                            <span class="block text-xs text-stone-400">Snapchat</span>
-                                            <span class="text-sm font-medium text-stone-800 group-hover:text-blush-500">helen_ewurama</span>
-                                        </div>
-                                    </div>
-                                    <i class="fa-solid fa-arrow-right text-xs text-stone-400 group-hover:translate-x-1 transition"></i>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 text-center text-xs text-stone-500 font-light">
-                            Studio Hours: Mon &ndash; Sat: 9:00 AM &ndash; 7:00 PM
-                        </div>
-                    </div>
-
+                    <span class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-xs font-medium border border-white/30 group-hover:bg-white group-hover:text-stone-900 transition duration-300">
+                        View Catalog <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </span>
                 </div>
             </div>
-        </section>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-warmnude-300/40 border-t border-warmnude-300 py-10 px-6 text-center text-xs text-stone-600">
-        <div class="max-w-7xl mx-auto space-y-3">
-            <p class="font-serif text-lg text-stone-800">Nailz by Helen</p>
-            <p class="font-light">Precision Nail Artistry & Eyelash Extensions</p>
-            <p class="text-stone-500 pt-4">&copy; <span id="year"></span> Nailz by Helen. All rights reserved.</p>
+        </div>
+    </section>
+
+    <!-- Interactive Catalogue Modal -->
+    <div id="catalogModal" class="fixed inset-0 z-50 bg-stone-900/80 backdrop-blur-md hidden opacity-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl border border-stone-200">
+            <div class="p-6 border-b border-stone-100 flex items-center justify-between">
+                <div>
+                    <h2 id="modalCategoryTitle" class="font-serif text-2xl text-stone-900">Collection</h2>
+                    <p class="text-xs text-stone-500">Select a style to request your custom booking.</p>
+                </div>
+                <button onclick="closeCatalog()" class="w-10 h-10 rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div id="modalGalleryGrid" class="p-6 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- Dynamic gallery images populated via script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer id="contact" class="bg-white border-t border-stone-200 py-10 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 text-center space-y-4">
+            <a href="index.html" class="brand-logo-nav">
+                <span class="brand-dark">Nailz</span><span class="brand-pink">by Helen</span>
+            </a>
+            <p class="text-xs text-stone-500">© 2026 Nailz by Helen. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Interactive Catalog Modal -->
-    <div id="catalogModal" class="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-md hidden flex items-center justify-center p-4 md:p-6 overflow-y-auto">
-        <div class="bg-vanilla-50 rounded-3xl max-w-5xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-warmnude-200 overflow-hidden my-auto">
-            
-            <div class="px-6 py-5 border-b border-warmnude-200 flex items-center justify-between bg-white/50">
-                <div>
-                    <h3 id="catalogModalTitle" class="font-serif text-2xl md:text-3xl text-stone-900">Catalog</h3>
-                    <p class="text-xs text-stone-500 font-light">Browse full gallery portfolio</p>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <div class="inline-flex rounded-full bg-stone-200/60 p-1 text-xs">
-                        <button onclick="switchCatalogTab('nails')" id="tab-btn-nails" class="px-4 py-1.5 rounded-full font-medium transition">Nails</button>
-                        <button onclick="switchCatalogTab('lashes')" id="tab-btn-lashes" class="px-4 py-1.5 rounded-full font-medium transition">Lashes</button>
-                    </div>
-                    <button onclick="closeCatalogModal()" class="w-9 h-9 rounded-full bg-stone-200/80 hover:bg-stone-300 text-stone-700 flex items-center justify-center transition ml-2">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="p-6 overflow-y-auto flex-1">
-                <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
-            </div>
-
-            <div class="px-6 py-4 border-t border-warmnude-200 bg-white/50 flex flex-wrap items-center justify-between gap-4">
-                <p class="text-xs text-stone-500">Found a style you love? Click any photo or book directly below.</p>
-                <button onclick="closeCatalogModal(); openBookingModal();" class="bg-stone-900 hover:bg-blush-500 text-white text-xs uppercase tracking-widest px-6 py-2.5 rounded-full transition">
-                    Book an Appointment
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Booking Modal -->
-    <div id="bookingModal" class="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-md hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-vanilla-50 rounded-3xl max-w-xl w-full p-6 md:p-8 shadow-2xl border border-warmnude-200 my-auto relative">
-            <button onclick="closeBookingModal()" class="absolute top-6 right-6 w-9 h-9 rounded-full bg-stone-200/80 hover:bg-stone-300 text-stone-700 flex items-center justify-center transition">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-
-            <span class="font-script text-blush-500 text-2xl block">Schedule Visit</span>
-            <h3 class="font-serif text-3xl text-stone-900 mb-6">Book a Slot</h3>
-
-            <form id="bookingForm" onsubmit="handleBookingSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1">Select Service</label>
-                    <select id="bookService" required class="w-full px-4 py-3 rounded-xl border border-warmnude-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blush-300">
-                        <option value="Full Gel Nail Set">Full Gel Nail Set</option>
-                        <option value="Acrylic Nail Extensions">Acrylic Nail Extensions</option>
-                        <option value="Volume Lash Extensions">Volume Lash Extensions</option>
-                        <option value="Classic Lash Set">Classic Lash Set</option>
-                        <option value="Combo: Lash & Nail Deluxe">Combo: Lash & Nail Deluxe</option>
-                        <option value="1-on-1 Training Session">1-on-1 Masterclass Training</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1">Select Date</label>
-                        <input type="date" id="bookDate" required class="w-full px-4 py-3 rounded-xl border border-warmnude-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blush-300">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1">Time Slot</label>
-                        <select id="bookTime" required class="w-full px-4 py-3 rounded-xl border border-warmnude-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blush-300">
-                            <option value="09:00 AM">09:00 AM</option>
-                            <option value="11:30 AM">11:30 AM</option>
-                            <option value="02:00 PM">02:00 PM</option>
-                            <option value="04:30 PM">04:30 PM</option>
-                            <option value="06:00 PM">06:00 PM</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1">Full Name</label>
-                    <input type="text" id="bookName" placeholder="Your Name" required class="w-full px-4 py-3 rounded-xl border border-warmnude-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blush-300">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-medium uppercase tracking-wider text-stone-600 mb-1">Phone / WhatsApp Number</label>
-                    <input type="tel" id="bookPhone" placeholder="050 000 0000" required class="w-full px-4 py-3 rounded-xl border border-warmnude-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blush-300">
-                </div>
-
-                <button type="submit" class="w-full bg-stone-900 text-white hover:bg-blush-500 text-xs uppercase tracking-widest py-4 rounded-xl transition shadow mt-2">
-                    Confirm & Reserve Slot
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- External Script File -->
     <script src="script.js"></script>
 </body>
 </html>

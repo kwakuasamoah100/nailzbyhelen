@@ -1,3 +1,51 @@
+/* Base Brand Font Styling */
+.brand-dark {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+    color: #1a1a1a;
+}
+
+.brand-pink {
+    font-family: 'Great Vibes', cursive;
+    font-weight: 400;
+    color: #f285a2;
+    margin-left: 0.15em;
+}
+
+/* Hero Section Main Title */
+.brand-logo-large {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.brand-logo-large .brand-pink {
+    font-size: 5.5rem;
+}
+
+/* Navbar & Header Logo Scale */
+.brand-logo-nav {
+    text-decoration: none;
+    font-size: 1.6rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.brand-logo-nav .brand-pink {
+    font-size: 2.1rem;
+}
+
+/* Responsive adjustments for mobile screens */
+@media (max-width: 768px) {
+    .brand-logo-large {
+        font-size: 3rem;
+    }
+    .brand-logo-large .brand-pink {
+        font-size: 3.8rem;
+    }
+}
+
 /* Custom scrollbar styling */
 ::-webkit-scrollbar {
     width: 8px;
