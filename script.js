@@ -1,4 +1,3 @@
-// Initial Default Catalog Data
 const defaultNails = [
     { title: "Vanilla Nude Chrome Set", category: "Nails", url: "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=800" },
     { title: "Blush Pink French Tip", category: "Nails", url: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&q=80&w=800" },
@@ -6,12 +5,11 @@ const defaultNails = [
 ];
 
 const defaultLashes = [
-    { title: "Soft Volume Lash Set", category: "Lashes", url: "https://images.unsplash.com/photo-1583001809873-a1284a5da537?auto=format&fit=crop&q=80&w=800" },
+    { title: "Soft Volume Lash Set", category: "Lashes", url: "https://images.unsplash.com/photo-1583001809873-a1284d563372?auto=format&fit=crop&q=80&w=800" },
     { title: "Hybrid Wispy Extensions", category: "Lashes", url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=800" },
     { title: "Natural Classic Extensions", category: "Lashes", url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800" }
 ];
 
-// Initialize LocalStorage Data
 function loadData() {
     let nails = JSON.parse(localStorage.getItem('nailz_nails_data'));
     let lashes = JSON.parse(localStorage.getItem('nailz_lashes_data'));
@@ -27,46 +25,46 @@ function loadData() {
     return { nails, lashes };
 }
 
-// Global Variables
 let nailsIndex = 0;
 let lashesIndex = 0;
 let currentCatalogTab = 'nails';
 
-// Initialize Page
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('year').textContent = new Date().getFullYear();
+    const yearEl = document.getElementById('year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
     
-    // Set minimum date selector for booking to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('bookDate').min = today;
+    const bookDateEl = document.getElementById('bookDate');
+    if (bookDateEl) {
+        const today = new Date().toISOString().split('T')[0];
+        bookDateEl.min = today;
+    }
 
     initHeroSlides();
     updateBadges();
 });
 
-// Auto-Rotating Hero Slideshow
 function initHeroSlides() {
     const { nails, lashes } = loadData();
 
     const updateNailsHero = () => {
-        if (nails.length > 0) {
-            const imgEl = document.getElementById('hero-nails-img');
-            imgEl.style.opacity = 0.3;
+        const imgEl = document.getElementById('hero-nails-img');
+        if (imgEl && nails.length > 0) {
+            imgEl.style.opacity = '0.4';
             setTimeout(() => {
                 imgEl.src = nails[nailsIndex].url;
-                imgEl.style.opacity = 1;
+                imgEl.style.opacity = '1';
                 nailsIndex = (nailsIndex + 1) % nails.length;
             }, 300);
         }
     };
 
     const updateLashesHero = () => {
-        if (lashes.length > 0) {
-            const imgEl = document.getElementById('hero-lashes-img');
-            imgEl.style.opacity = 0.3;
+        const imgEl = document.getElementById('hero-lashes-img');
+        if (imgEl && lashes.length > 0) {
+            imgEl.style.opacity = '0.4';
             setTimeout(() => {
                 imgEl.src = lashes[lashesIndex].url;
-                imgEl.style.opacity = 1;
+                imgEl.style.opacity = '1';
                 lashesIndex = (lashesIndex + 1) % lashes.length;
             }, 300);
         }
@@ -81,24 +79,22 @@ function initHeroSlides() {
 
 function updateBadges() {
     const { nails, lashes } = loadData();
-    document.getElementById('nails-count-badge').textContent = `${nails.length} Styles`;
-    document.getElementById('lashes-count-badge').textContent = `${lashes.length} Styles`;
+    const nailsBadge = document.getElementById('nails-count-badge');
+    const lashesBadge = document.getElementById('lashes-count-badge');
+    if (nailsBadge) nailsBadge.textContent = `${nails.length} Styles Available`;
+    if (lashesBadge) lashesBadge.textContent = `${lashes.length} Styles Available`;
 }
 
-// Mobile Nav Toggle
-function toggleMobileMenu() {
-    document.getElementById('mobileMenu').classList.toggle('hidden');
-}
-
-// Catalog Modal Logic
 function openCatalogModal(category = 'nails') {
     currentCatalogTab = category;
-    document.getElementById('catalogModal').classList.remove('hidden');
+    const modal = document.getElementById('catalogModal');
+    if (modal) modal.classList.remove('hidden');
     renderCatalogGrid();
 }
 
 function closeCatalogModal() {
-    document.getElementById('catalogModal').classList.add('hidden');
+    const modal = document.getElementById('catalogModal');
+    if (modal) modal.classList.add('hidden');
 }
 
 function switchCatalogTab(tab) {
@@ -110,24 +106,26 @@ function renderCatalogGrid() {
     const { nails, lashes } = loadData();
     const grid = document.getElementById('catalogGrid');
     const title = document.getElementById('catalogModalTitle');
+    if (!grid) return;
+
     const items = currentCatalogTab === 'nails' ? nails : lashes;
+    if (title) title.textContent = currentCatalogTab === 'nails' ? 'Nails Collection' : 'Lashes Collection';
 
-    title.textContent = currentCatalogTab === 'nails' ? 'Nails Catalog' : 'Lashes Catalog';
-
-    // Update Tab Styles
     const nailsBtn = document.getElementById('tab-btn-nails');
     const lashesBtn = document.getElementById('tab-btn-lashes');
 
-    if (currentCatalogTab === 'nails') {
-        nailsBtn.className = "px-4 py-1.5 rounded-full font-medium transition bg-stone-900 text-white shadow";
-        lashesBtn.className = "px-4 py-1.5 rounded-full font-medium transition text-stone-600 hover:text-stone-900";
-    } else {
-        lashesBtn.className = "px-4 py-1.5 rounded-full font-medium transition bg-stone-900 text-white shadow";
-        nailsBtn.className = "px-4 py-1.5 rounded-full font-medium transition text-stone-600 hover:text-stone-900";
+    if (nailsBtn && lashesBtn) {
+        if (currentCatalogTab === 'nails') {
+            nailsBtn.className = "px-4 py-1.5 rounded-full font-medium transition bg-stone-900 text-white shadow";
+            lashesBtn.className = "px-4 py-1.5 rounded-full font-medium transition text-stone-600 hover:text-stone-900 bg-stone-100";
+        } else {
+            lashesBtn.className = "px-4 py-1.5 rounded-full font-medium transition bg-stone-900 text-white shadow";
+            nailsBtn.className = "px-4 py-1.5 rounded-full font-medium transition text-stone-600 hover:text-stone-900 bg-stone-100";
+        }
     }
 
     grid.innerHTML = items.map((item) => `
-        <div class="bg-white rounded-2xl overflow-hidden border border-warmnude-100 shadow-sm hover:shadow-md transition group">
+        <div class="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-md transition group">
             <div class="aspect-square relative overflow-hidden bg-stone-100">
                 <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
             </div>
@@ -136,7 +134,7 @@ function renderCatalogGrid() {
                     <h4 class="font-serif text-lg text-stone-900 font-medium">${item.title}</h4>
                     <span class="text-[10px] text-stone-400 uppercase tracking-widest">${item.category}</span>
                 </div>
-                <button onclick="closeCatalogModal(); openBookingModal('${item.title}');" class="w-8 h-8 rounded-full bg-vanilla-100 text-stone-700 hover:bg-blush-500 hover:text-white flex items-center justify-center transition">
+                <button onclick="closeCatalogModal(); openBookingModal('${item.title}');" class="w-8 h-8 rounded-full bg-stone-100 text-stone-700 hover:bg-rose-500 hover:text-white flex items-center justify-center transition">
                     <i class="fa-solid fa-calendar-plus text-xs"></i>
                 </button>
             </div>
@@ -144,22 +142,25 @@ function renderCatalogGrid() {
     `).join('');
 }
 
-// Booking Modal Logic
 function openBookingModal(presetService = '') {
     if (presetService) {
         const serviceSelect = document.getElementById('bookService');
-        for (let i = 0; i < serviceSelect.options.length; i++) {
-            if (serviceSelect.options[i].value.toLowerCase().includes(presetService.toLowerCase())) {
-                serviceSelect.selectedIndex = i;
-                break;
+        if (serviceSelect) {
+            for (let i = 0; i < serviceSelect.options.length; i++) {
+                if (serviceSelect.options[i].value.toLowerCase().includes(presetService.toLowerCase())) {
+                    serviceSelect.selectedIndex = i;
+                    break;
+                }
             }
         }
     }
-    document.getElementById('bookingModal').classList.remove('hidden');
+    const bookingModal = document.getElementById('bookingModal');
+    if (bookingModal) bookingModal.classList.remove('hidden');
 }
 
 function closeBookingModal() {
-    document.getElementById('bookingModal').classList.add('hidden');
+    const bookingModal = document.getElementById('bookingModal');
+    if (bookingModal) bookingModal.classList.add('hidden');
 }
 
 function handleBookingSubmit(event) {
@@ -172,9 +173,7 @@ function handleBookingSubmit(event) {
     const time = document.getElementById('bookTime').value;
 
     const helenWhatsAppNumber = "233547900382";
-    const helenCallNumber = "0502971399";
 
-    // 1. WhatsApp Message for Helen (Merchant)
     const merchantMessage = `✨ *NEW BOOKING REQUEST - NAILZ BY HELEN* ✨\n\n` +
                             `👤 *Client Name:* ${name}\n` +
                             `📞 *Client Phone:* ${clientPhone}\n` +
@@ -183,39 +182,9 @@ function handleBookingSubmit(event) {
                             `⏰ *Booking Time:* ${time}\n\n` +
                             `Please confirm this appointment slot!`;
 
-    // 2. WhatsApp Message Copy for Customer
-    const customerMessage = `💖 *BOOKING CONFIRMATION COPY - NAILZ BY HELEN* 💖\n\n` +
-                            `Hello ${name},\n` +
-                            `Here are your booking details:\n\n` +
-                            `💅 *Service:* ${service}\n` +
-                            `📅 *Date:* ${date}\n` +
-                            `⏰ *Time Slot:* ${time}\n` +
-                            `📞 *Your Phone:* ${clientPhone}\n\n` +
-                            `If you need to make changes, contact Helen:\n` +
-                            `• WhatsApp: 0547900382\n` +
-                            `• Direct Call: ${helenCallNumber}\n\n` +
-                            `Thank you for choosing Nailz by Helen!`;
-
-    // Format URLs for WhatsApp
     const merchantUrl = `https://wa.me/${helenWhatsAppNumber}?text=${encodeURIComponent(merchantMessage)}`;
 
-    // Clean client phone for WhatsApp standard format (assumes local 0... converts to Ghana country code 233)
-    let formattedClientPhone = clientPhone.replace(/\D/g, '');
-    if (formattedClientPhone.startsWith('0')) {
-        formattedClientPhone = '233' + formattedClientPhone.substring(1);
-    }
-    const customerUrl = `https://wa.me/${formattedClientPhone}?text=${encodeURIComponent(customerMessage)}`;
-
-    // Open WhatsApp to send to Helen
     window.open(merchantUrl, '_blank');
-
-    // Optionally send copy to client if valid phone number is entered
-    if (formattedClientPhone.length >= 10) {
-        setTimeout(() => {
-            window.open(customerUrl, '_blank');
-        }, 1000);
-    }
-
     alert(`Thank you, ${name}! Your booking request for ${service} on ${date} at ${time} has been prepared. Please click send in WhatsApp to finalize with Helen.`);
     closeBookingModal();
 }
