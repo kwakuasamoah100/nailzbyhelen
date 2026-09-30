@@ -10,9 +10,15 @@ const defaultLashes = [
     { title: "Natural Classic Extensions", category: "Lashes", url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800" }
 ];
 
+const defaultTraining = [
+    { title: "Nail Extensions & Apex Class", category: "Training", url: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&q=80&w=800" },
+    { title: "Live Model Manicure Practice", category: "Training", url: "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=800" }
+];
+
 function loadData() {
     let nails = JSON.parse(localStorage.getItem('nailz_nails_data'));
     let lashes = JSON.parse(localStorage.getItem('nailz_lashes_data'));
+    let training = JSON.parse(localStorage.getItem('nailz_training_data'));
 
     if (!nails || nails.length === 0) {
         localStorage.setItem('nailz_nails_data', JSON.stringify(defaultNails));
@@ -22,11 +28,16 @@ function loadData() {
         localStorage.setItem('nailz_lashes_data', JSON.stringify(defaultLashes));
         lashes = defaultLashes;
     }
-    return { nails, lashes };
+    if (!training || training.length === 0) {
+        localStorage.setItem('nailz_training_data', JSON.stringify(defaultTraining));
+        training = defaultTraining;
+    }
+    return { nails, lashes, training };
 }
 
 let nailsIndex = 0;
 let lashesIndex = 0;
+let trainingIndex = 0;
 let currentCatalogTab = 'nails';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -43,15 +54,19 @@ document.addEventListener('DOMContentLoaded', () => {
     updateBadges();
 });
 
-function initHeroSlides() {
-    const { nails, lashes } = loadData();
+function toggleMobileNav() {
+    const nav = document.getElementById('mobileNav');
+    if (nav) nav.classList.toggle('hidden');
+}
 
+function initHeroSlides() {
     const updateNailsHero = () => {
+        const { nails } = loadData();
         const imgEl = document.getElementById('hero-nails-img');
         if (imgEl && nails.length > 0) {
             imgEl.style.opacity = '0.4';
             setTimeout(() => {
-                imgEl.src = nails[nailsIndex].url;
+                imgEl.src = nails[nailsIndex % nails.length].url;
                 imgEl.style.opacity = '1';
                 nailsIndex = (nailsIndex + 1) % nails.length;
             }, 300);
@@ -59,22 +74,38 @@ function initHeroSlides() {
     };
 
     const updateLashesHero = () => {
+        const { lashes } = loadData();
         const imgEl = document.getElementById('hero-lashes-img');
         if (imgEl && lashes.length > 0) {
             imgEl.style.opacity = '0.4';
             setTimeout(() => {
-                imgEl.src = lashes[lashesIndex].url;
+                imgEl.src = lashes[lashesIndex % lashes.length].url;
                 imgEl.style.opacity = '1';
                 lashesIndex = (lashesIndex + 1) % lashes.length;
             }, 300);
         }
     };
 
+    const updateTrainingHero = () => {
+        const { training } = loadData();
+        const imgEl = document.getElementById('hero-training-img');
+        if (imgEl && training.length > 0) {
+            imgEl.style.opacity = '0.4';
+            setTimeout(() => {
+                imgEl.src = training[trainingIndex % training.length].url;
+                imgEl.style.opacity = '1';
+                trainingIndex = (trainingIndex + 1) % training.length;
+            }, 300);
+        }
+    };
+
     updateNailsHero();
     updateLashesHero();
+    updateTrainingHero();
 
     setInterval(updateNailsHero, 4000);
     setInterval(updateLashesHero, 4500);
+    setInterval(updateTrainingHero, 5000);
 }
 
 function updateBadges() {
@@ -188,3 +219,13 @@ function handleBookingSubmit(event) {
     alert(`Thank you, ${name}! Your booking request for ${service} on ${date} at ${time} has been prepared. Please click send in WhatsApp to finalize with Helen.`);
     closeBookingModal();
 }
+
+// Live update listener across tabs
+window.addEventListener('storage', (e) => {
+    if (['nailz_nails_data', 'nailz_lashes_data', 'nailz_training_data'].includes(e.key)) {
+        updateBadges();
+        if (!document.getElementById('catalogModal').classList.contains('hidden')) {
+            renderCatalogGrid();
+        }
+    }
+});

@@ -43,14 +43,16 @@ function lockPortal() {
 function getAdminData() {
     const nails = JSON.parse(localStorage.getItem('nailz_nails_data')) || [];
     const lashes = JSON.parse(localStorage.getItem('nailz_lashes_data')) || [];
-    return { nails, lashes };
+    const training = JSON.parse(localStorage.getItem('nailz_training_data')) || [];
+    return { nails, lashes, training };
 }
 
 function renderAdminDashboard() {
-    const { nails, lashes } = getAdminData();
+    const { nails, lashes, training } = getAdminData();
 
     document.getElementById('nailsCount').textContent = `${nails.length} styles`;
     document.getElementById('lashesCount').textContent = `${lashes.length} styles`;
+    document.getElementById('trainingCount').textContent = `${training.length} images`;
 
     const renderCard = (item, index, category) => `
         <div class="bg-stone-50 rounded-xl overflow-hidden border border-stone-200 relative group">
@@ -69,6 +71,7 @@ function renderAdminDashboard() {
 
     document.getElementById('adminNailsGrid').innerHTML = nails.map((item, idx) => renderCard(item, idx, 'Nails')).join('');
     document.getElementById('adminLashesGrid').innerHTML = lashes.map((item, idx) => renderCard(item, idx, 'Lashes')).join('');
+    document.getElementById('adminTrainingGrid').innerHTML = training.map((item, idx) => renderCard(item, idx, 'Training')).join('');
 }
 
 async function handleAdminUpload(e) {
@@ -118,7 +121,10 @@ async function handleAdminUpload(e) {
         return;
     }
 
-    const storageKey = category === 'Nails' ? 'nailz_nails_data' : 'nailz_lashes_data';
+    let storageKey = 'nailz_nails_data';
+    if (category === 'Lashes') storageKey = 'nailz_lashes_data';
+    if (category === 'Training') storageKey = 'nailz_training_data';
+
     let currentList = JSON.parse(localStorage.getItem(storageKey)) || [];
 
     currentList.unshift({ title, category, url: finalImageUrl });
@@ -132,13 +138,16 @@ async function handleAdminUpload(e) {
     submitBtn.innerHTML = `<span>Publish to Website</span>`;
 
     renderAdminDashboard();
-    alert(`Successfully published new ${category} style!`);
+    alert(`Successfully published new ${category} image!`);
 }
 
 function deleteAdminImage(category, index) {
-    if (!confirm('Are you sure you want to remove this style?')) return;
+    if (!confirm('Are you sure you want to remove this image?')) return;
 
-    const storageKey = category === 'Nails' ? 'nailz_nails_data' : 'nailz_lashes_data';
+    let storageKey = 'nailz_nails_data';
+    if (category === 'Lashes') storageKey = 'nailz_lashes_data';
+    if (category === 'Training') storageKey = 'nailz_training_data';
+
     let currentList = JSON.parse(localStorage.getItem(storageKey)) || [];
 
     currentList.splice(index, 1);
@@ -146,12 +155,3 @@ function deleteAdminImage(category, index) {
 
     renderAdminDashboard();
 }
-
-window.addEventListener('storage', (e) => {
-    if (e.key === 'nailz_nails_data' || e.key === 'nailz_lashes_data') {
-        updateBadges();
-        if (!document.getElementById('catalogModal').classList.contains('hidden')) {
-            renderCatalogGrid();
-        }
-    }
-});
