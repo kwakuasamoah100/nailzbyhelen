@@ -1,3 +1,6 @@
+const CLOUDINARY_CLOUD_NAME = 'uropsnyi';
+const CLOUDINARY_PRESET = 'nailz_preset';
+
 document.addEventListener('DOMContentLoaded', () => {
     if (sessionStorage.getItem('nailz_admin_authed') === 'true') {
         document.getElementById('authOverlay').classList.add('hidden');
@@ -68,23 +71,68 @@ function renderAdminDashboard() {
     document.getElementById('adminLashesGrid').innerHTML = lashes.map((item, idx) => renderCard(item, idx, 'Lashes')).join('');
 }
 
-function handleAdminUpload(e) {
+async function handleAdminUpload(e) {
     e.preventDefault();
     const category = document.getElementById('uploadCategory').value;
-    const title = document.getElementById('uploadTitle').value;
-    const url = document.getElementById('uploadUrl').value;
+    const title = document.getElementById('uploadTitle').value.trim();
+    const urlInput = document.getElementById('uploadUrl').value.trim();
+    const fileInput = document.getElementById('uploadFile');
+    const submitBtn = document.getElementById('submitBtn');
+
+    let finalImageUrl = urlInput;
+
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_PRESET);
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Uploading Image...`;
+
+        try {
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await res.json();
+            if (data.secure_url) {
+                finalImageUrl = data.secure_url;
+            } else {
+                alert('Cloudinary upload failed. Check preset configuration.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>Publish to Website</span>`;
+                return;
+            }
+        } catch (err) {
+            alert('Network error while uploading file.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<span>Publish to Website</span>`;
+            return;
+        }
+    }
+
+    if (!finalImageUrl) {
+        alert('Please select an image file to upload OR provide an Image URL.');
+        return;
+    }
 
     const storageKey = category === 'Nails' ? 'nailz_nails_data' : 'nailz_lashes_data';
     let currentList = JSON.parse(localStorage.getItem(storageKey)) || [];
 
-    currentList.unshift({ title, category, url });
+    currentList.unshift({ title, category, url: finalImageUrl });
     localStorage.setItem(storageKey, JSON.stringify(currentList));
 
     document.getElementById('uploadTitle').value = '';
     document.getElementById('uploadUrl').value = '';
+    fileInput.value = '';
+
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = `<span>Publish to Website</span>`;
 
     renderAdminDashboard();
-    alert(`Successfully added new ${category} style!`);
+    alert(`Successfully published new ${category} style!`);
 }
 
 function deleteAdminImage(category, index) {
@@ -98,3 +146,12 @@ function deleteAdminImage(category, index) {
 
     renderAdminDashboard();
 }
+
+window.addEventListener('storage', (e) => {
+    if (e.key === 'nailz_nails_data' || e.key === 'nailz_lashes_data') {
+        updateBadges();
+        if (!document.getElementById('catalogModal').classList.contains('hidden')) {
+            renderCatalogGrid();
+        }
+    }
+});
