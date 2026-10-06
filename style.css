@@ -13,65 +13,66 @@ body.nz-body {
     background: linear-gradient(180deg, #fdf7f3 0%, #fbeff1 50%, #f8eee6 100%) fixed;
 }
 
-/* ===== Logo (modern wordmark) ===== */
-.nz-logo {
+/* ===== Updated Logo with Circular Frame Streaks ===== */
+.nz-logo-wrapper {
+    position: relative;
     display: inline-flex;
-    align-items: baseline;
-    gap: 0.35rem;
-    text-decoration: none;
-    line-height: 1;
-}
-
-.nz-logo-main {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    font-weight: 700;
-    font-size: 1.25rem;
-    letter-spacing: 0.26em;
-    margin-right: -0.26em;
-    text-transform: uppercase;
-    background: linear-gradient(135deg, #2a1520 0%, #8a3556 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.nz-logo-script {
-    font-family: 'Great Vibes', cursive;
-    font-weight: 400;
-    font-size: 1.9rem;
-    color: var(--nz-rose);
-    display: inline-block;
-    transform: translateY(0.12em) rotate(-3deg);
-}
-
-/* Light variant (dark backgrounds) */
-.nz-logo--light .nz-logo-main {
-    background: none;
-    -webkit-text-fill-color: #ffffff;
-    color: #ffffff;
-}
-
-/* Large hero variant */
-.nz-logo--large {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 0;
+    justify-content: center;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
 }
 
-.nz-logo--large .nz-logo-main {
-    font-size: clamp(3rem, 12vw, 6.75rem);
-    font-weight: 800;
-    letter-spacing: 0.2em;
-    margin-right: -0.2em;
-    padding-bottom: 0.05em;
+/* Script Typography */
+.nz-logo-script-main {
+    font-family: 'Great Vibes', 'Alex Brush', cursive;
+    font-weight: 400;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    color: var(--nz-rose, #f285a2);
+    white-space: nowrap;
+    z-index: 2;
+    position: relative;
+    line-height: 1;
+    padding: 0 0.8rem;
 }
 
-.nz-logo--large .nz-logo-script {
-    font-size: clamp(2.4rem, 8vw, 4.6rem);
-    margin-top: -0.45em;
-    transform: rotate(-4deg) translateX(0.1em);
-    text-shadow: 0 2px 14px rgba(242, 133, 162, 0.35);
+/* Round Streaks Ring Overlay */
+.nz-logo-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 140%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.nz-logo-ring path {
+    stroke: var(--nz-rose, #f285a2);
+    fill: none;
+    stroke-linecap: round;
+}
+
+/* Large Hero Logo Variant */
+.nz-logo--large {
+    display: inline-flex;
+    margin: 0 auto;
+}
+
+.nz-logo--large .nz-logo-script-main {
+    font-size: clamp(3.2rem, 10vw, 6rem);
+    padding: 0 1.5rem;
+}
+
+.nz-logo--large .nz-logo-ring {
+    width: 130%;
+    height: 160%;
+}
+
+/* Light / Dark Mode Adjustments */
+.nz-logo--light .nz-logo-script-main {
+    color: var(--nz-rose, #f285a2);
 }
 
 /* ===== Section backgrounds ===== */

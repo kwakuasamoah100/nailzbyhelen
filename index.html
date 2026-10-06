@@ -8,7 +8,7 @@
     <!-- Google Fonts & Tailwind -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:wght@400;600&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -18,8 +18,14 @@
     <!-- Navigation Header -->
     <header class="bg-white/90 backdrop-blur-md border-b border-stone-200/60 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="index.html" class="nz-logo" aria-label="Nailz by Helen">
-                <span class="nz-logo-main">Nailz</span><span class="nz-logo-script">by Helen</span>
+            <a href="index.html" class="nz-logo-wrapper" aria-label="Nailz by Helen">
+                <svg class="nz-logo-ring" viewBox="0 0 200 120" preserveAspectRatio="none">
+                    <path d="M 25 55 A 75 45 0 0 1 175 55" stroke-width="2.5" opacity="0.85" />
+                    <path d="M 32 48 A 70 40 0 0 1 168 48" stroke-width="1.5" opacity="0.6" />
+                    <path d="M 25 65 A 75 45 0 0 0 175 65" stroke-width="2.5" opacity="0.85" />
+                    <path d="M 32 72 A 70 40 0 0 0 168 72" stroke-width="1.5" opacity="0.6" />
+                </svg>
+                <span class="nz-logo-script-main">Nailz by Helen</span>
             </a>
 
             <!-- Desktop Nav -->
@@ -62,9 +68,15 @@
             <span class="text-xs uppercase tracking-widest text-rose-500 bg-rose-100/60 px-4 py-1.5 rounded-full font-semibold">
                 Luxury Beauty Experience
             </span>
-            <h1 class="nz-logo nz-logo--large pt-2" aria-label="Nailz by Helen">
-                <span class="nz-logo-main">Nailz</span><span class="nz-logo-script">by Helen</span>
-            </h1>
+            <div class="nz-logo-wrapper nz-logo--large my-4">
+                <svg class="nz-logo-ring" viewBox="0 0 240 140" preserveAspectRatio="none">
+                    <path d="M 20 65 A 95 55 0 0 1 220 65" stroke-width="3" opacity="0.9" />
+                    <path d="M 30 57 A 88 50 0 0 1 210 57" stroke-width="1.8" opacity="0.65" />
+                    <path d="M 20 75 A 95 55 0 0 0 220 75" stroke-width="3" opacity="0.9" />
+                    <path d="M 30 83 A 88 50 0 0 0 210 83" stroke-width="1.8" opacity="0.65" />
+                </svg>
+                <h1 class="nz-logo-script-main">Nailz by Helen</h1>
+            </div>
             <p class="text-stone-500 text-sm md:text-base max-w-lg mx-auto font-light leading-relaxed">
                 Understated, lightweight aesthetics with handcrafted precision. Tap a card below to browse our styles and book.
             </p>
@@ -118,7 +130,7 @@
                 <!-- Left Details -->
                 <div class="space-y-6">
                     <span class="text-[11px] font-semibold uppercase tracking-widest text-rose-500 bg-rose-50 px-3.5 py-1.5 rounded-full border border-rose-100">
-                        Masterclass & Mentorship
+                        Professional Skill Courses
                     </span>
                     <h2 class="font-serif text-3xl md:text-4xl text-stone-900 leading-tight">
                         Nail & Lash Training
@@ -211,7 +223,7 @@
         </div>
     </section>
 
-    <!-- Updated Contact Section (Minimalist Layout with Live Details) -->
+    <!-- Contact Section -->
     <section id="contact" class="py-20 contact-bg text-center">
         <div class="max-w-6xl mx-auto px-6 space-y-12">
             
@@ -223,10 +235,9 @@
                 </p>
             </div>
 
-            <!-- Three Clean Contact Cards -->
+            <!-- Contact Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
                 
-                <!-- Location Card -->
                 <div class="bg-white p-8 rounded-3xl border border-stone-200/80 shadow-sm space-y-3">
                     <div class="w-9 h-9 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center text-sm">
                         <i class="fa-solid fa-location-dot"></i>
@@ -240,7 +251,6 @@
                     </a>
                 </div>
 
-                <!-- Call & WhatsApp Card -->
                 <div class="bg-white p-8 rounded-3xl border border-stone-200/80 shadow-sm space-y-3">
                     <div class="w-9 h-9 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center text-sm">
                         <i class="fa-solid fa-phone"></i>
@@ -256,7 +266,6 @@
                     </div>
                 </div>
 
-                <!-- Social Handles Card -->
                 <div class="bg-white p-8 rounded-3xl border border-stone-200/80 shadow-sm space-y-3">
                     <div class="w-9 h-9 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center text-sm">
                         <i class="fa-solid fa-share-nodes"></i>
@@ -367,8 +376,14 @@
     <!-- Footer Section -->
     <footer class="footer-bg py-10 mt-auto">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-stone-500">
-            <a href="index.html" class="nz-logo nz-logo--light" aria-label="Nailz by Helen">
-                <span class="nz-logo-main">Nailz</span><span class="nz-logo-script">by Helen</span>
+            <a href="index.html" class="nz-logo-wrapper nz-logo--light" aria-label="Nailz by Helen">
+                <svg class="nz-logo-ring" viewBox="0 0 200 120" preserveAspectRatio="none">
+                    <path d="M 25 55 A 75 45 0 0 1 175 55" stroke-width="2.5" opacity="0.85" />
+                    <path d="M 32 48 A 70 40 0 0 1 168 48" stroke-width="1.5" opacity="0.6" />
+                    <path d="M 25 65 A 75 45 0 0 0 175 65" stroke-width="2.5" opacity="0.85" />
+                    <path d="M 32 72 A 70 40 0 0 0 168 72" stroke-width="1.5" opacity="0.6" />
+                </svg>
+                <span class="nz-logo-script-main">Nailz by Helen</span>
             </a>
             <p>© <span id="year"></span> Nailz by Helen. Designed for understated beauty.</p>
         </div>
