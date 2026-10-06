@@ -35,6 +35,33 @@ function loadData() {
     return { nails, lashes, training };
 }
 
+const catalogStyles = {
+    nails: [
+        { name: "Acrylic Nails", icon: "fa-gem" },
+        { name: "Stick-on Nails", icon: "fa-hand-sparkles" },
+        { name: "Gel-X Nails", icon: "fa-wand-magic-sparkles" }
+    ],
+    lashes: [
+        { name: "Classic Cat Eye Lashes", icon: "fa-eye" },
+        { name: "Hybrid Cat Eye Lashes", icon: "fa-eye" },
+        { name: "Volume Cat Eye Lashes", icon: "fa-eye" },
+        { name: "Hybrid Wispy Lashes", icon: "fa-feather" },
+        { name: "Volume Wispy Lashes", icon: "fa-feather" },
+        { name: "Wet Set Lashes", icon: "fa-droplet" }
+    ]
+};
+
+function getStyleImages() {
+    try { return JSON.parse(localStorage.getItem('nailz_style_images')) || {}; }
+    catch (e) { return {}; }
+}
+
+function optimizeImg(url) {
+    return url.includes('res.cloudinary.com') && url.includes('/image/upload/') && !url.includes('/f_auto')
+        ? url.replace('/image/upload/', '/image/upload/f_auto,q_auto,w_800/')
+        : url;
+}
+
 let nailsIndex = 0;
 let lashesIndex = 0;
 let trainingIndex = 0;
@@ -109,11 +136,10 @@ function initHeroSlides() {
 }
 
 function updateBadges() {
-    const { nails, lashes } = loadData();
     const nailsBadge = document.getElementById('nails-count-badge');
     const lashesBadge = document.getElementById('lashes-count-badge');
-    if (nailsBadge) nailsBadge.textContent = `${nails.length} Styles Available`;
-    if (lashesBadge) lashesBadge.textContent = `${lashes.length} Styles Available`;
+    if (nailsBadge) nailsBadge.textContent = `${catalogStyles.nails.length} Styles Available`;
+    if (lashesBadge) lashesBadge.textContent = `${catalogStyles.lashes.length} Styles Available`;
 }
 
 function openCatalogModal(category = 'nails') {
@@ -134,55 +160,67 @@ function switchCatalogTab(tab) {
 }
 
 function renderCatalogGrid() {
-    const { nails, lashes } = loadData();
     const grid = document.getElementById('catalogGrid');
     const title = document.getElementById('catalogModalTitle');
     if (!grid) return;
 
-    const items = currentCatalogTab === 'nails' ? nails : lashes;
-    if (title) title.textContent = currentCatalogTab === 'nails' ? 'Nails Collection' : 'Lashes Collection';
+    const items = catalogStyles[currentCatalogTab];
+    if (title) title.textContent = currentCatalogTab === 'nails' ? 'Nail Styles' : 'Lash Extension Styles';
 
     const nailsBtn = document.getElementById('tab-btn-nails');
     const lashesBtn = document.getElementById('tab-btn-lashes');
 
     if (nailsBtn && lashesBtn) {
         if (currentCatalogTab === 'nails') {
-            nailsBtn.className = "px-4 py-1.5 rounded-full font-medium transition bg-stone-900 text-white shadow";
-            lashesBtn.className = "px-4 py-1.5 rounded-full font-medium transition text-stone-600 hover:text-stone-900 bg-stone-100";
+            nailsBtn.className = "px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white shadow";
+            lashesBtn.className = "px-4 py-1.5 rounded-full text-xs font-medium transition text-stone-600 hover:text-stone-900 bg-stone-100";
         } else {
-            lashesBtn.className = "px-4 py-1.5 rounded-full font-medium transition bg-stone-900 text-white shadow";
-            nailsBtn.className = "px-4 py-1.5 rounded-full font-medium transition text-stone-600 hover:text-stone-900 bg-stone-100";
+            lashesBtn.className = "px-4 py-1.5 rounded-full text-xs font-medium transition bg-stone-900 text-white shadow";
+            nailsBtn.className = "px-4 py-1.5 rounded-full text-xs font-medium transition text-stone-600 hover:text-stone-900 bg-stone-100";
         }
     }
 
-    grid.innerHTML = items.map((item) => `
-        <div class="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-md transition group">
-            <div class="aspect-square relative overflow-hidden bg-stone-100">
-                <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-            </div>
-            <div class="p-4 flex items-center justify-between">
-                <div>
-                    <h4 class="font-serif text-lg text-stone-900 font-medium">${item.title}</h4>
-                    <span class="text-[10px] text-stone-400 uppercase tracking-widest">${item.category}</span>
-                </div>
-                <button onclick="closeCatalogModal(); openBookingModal('${item.title}');" class="w-8 h-8 rounded-full bg-stone-100 text-stone-700 hover:bg-rose-500 hover:text-white flex items-center justify-center transition">
+    const styleImages = getStyleImages();
+    grid.innerHTML = items.map((item, idx) => {
+        const img = styleImages[item.name];
+        const media = img
+            ? `<img src="${optimizeImg(img)}" alt="${item.name}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">`
+            : `<span class="text-rose-300 group-hover:text-rose-500 text-4xl transition"><i class="fa-solid ${item.icon}"></i></span>`;
+        return `
+        <button type="button" onclick="bookStyle('${currentCatalogTab}', ${idx})" class="group text-left bg-white rounded-2xl overflow-hidden border border-stone-200 hover:border-rose-300 shadow-sm hover:shadow-lg transition flex flex-col">
+            <div class="aspect-[4/3] bg-gradient-to-br from-rose-100 via-rose-50 to-amber-50 flex items-center justify-center overflow-hidden">${media}</div>
+            <div class="p-4 flex items-center justify-between gap-3">
+                <span class="font-serif text-lg text-stone-900 font-medium leading-snug">${item.name}</span>
+                <span class="shrink-0 w-8 h-8 rounded-full bg-stone-100 text-stone-700 group-hover:bg-rose-500 group-hover:text-white flex items-center justify-center transition">
                     <i class="fa-solid fa-calendar-plus text-xs"></i>
-                </button>
+                </span>
             </div>
-        </div>
-    `).join('');
+        </button>`;
+    }).join('');
+}
+
+function bookStyle(category, index) {
+    const item = catalogStyles[category][index];
+    if (!item) return;
+    closeCatalogModal();
+    openBookingModal(item.name);
 }
 
 function openBookingModal(presetService = '') {
     if (presetService) {
         const serviceSelect = document.getElementById('bookService');
         if (serviceSelect) {
+            const wanted = presetService.toLowerCase();
+            let match = -1;
             for (let i = 0; i < serviceSelect.options.length; i++) {
-                if (serviceSelect.options[i].value.toLowerCase().includes(presetService.toLowerCase())) {
-                    serviceSelect.selectedIndex = i;
-                    break;
+                if (serviceSelect.options[i].value.toLowerCase() === wanted) { match = i; break; }
+            }
+            if (match === -1) {
+                for (let i = 0; i < serviceSelect.options.length; i++) {
+                    if (serviceSelect.options[i].value.toLowerCase().includes(wanted)) { match = i; break; }
                 }
             }
+            if (match !== -1) serviceSelect.selectedIndex = match;
         }
     }
     const bookingModal = document.getElementById('bookingModal');
@@ -222,7 +260,7 @@ function handleBookingSubmit(event) {
 
 // Live update listener across tabs
 window.addEventListener('storage', (e) => {
-    if (['nailz_nails_data', 'nailz_lashes_data', 'nailz_training_data'].includes(e.key)) {
+    if (['nailz_nails_data', 'nailz_lashes_data', 'nailz_training_data', 'nailz_style_images'].includes(e.key)) {
         updateBadges();
         if (!document.getElementById('catalogModal').classList.contains('hidden')) {
             renderCatalogGrid();

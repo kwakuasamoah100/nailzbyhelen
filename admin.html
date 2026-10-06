@@ -57,14 +57,15 @@
             
             <!-- Upload Form -->
             <div class="lg:col-span-1 bg-white p-6 rounded-2xl border border-stone-200 shadow-sm h-fit">
-                <h2 class="font-serif text-xl text-stone-900 mb-4 pb-2 border-b border-stone-100">Add New Image</h2>
+                <h2 class="font-serif text-xl text-stone-900 mb-1">Add Slideshow Image</h2>
+                <p class="text-[11px] text-stone-400 mb-4 pb-2 border-b border-stone-100">Rotating photos on the homepage cards and training section.</p>
                 
                 <form onsubmit="handleAdminUpload(event)" class="space-y-4">
                     <div>
                         <label class="block text-xs uppercase tracking-wider text-stone-500 mb-1">Category</label>
                         <select id="uploadCategory" required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-stone-400 outline-none">
-                            <option value="Nails">Nails Collection</option>
-                            <option value="Lashes">Lashes Collection</option>
+                            <option value="Nails">Nails Hero Slideshow</option>
+                            <option value="Lashes">Lashes Hero Slideshow</option>
                             <option value="Training">One-on-One Training Showcase</option>
                         </select>
                     </div>
@@ -98,10 +99,25 @@
 
             <!-- Current Images Management Grid -->
             <div class="lg:col-span-2 space-y-6">
-                
+
+                <!-- Style Photos -->
+                <div class="bg-white p-6 rounded-2xl border border-rose-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-1">
+                        <h3 class="font-serif text-2xl text-stone-900">Style Photos</h3>
+                        <span id="stylePhotoCount" class="text-xs bg-rose-50 text-rose-600 px-3 py-1 rounded-full">0 of 9 set</span>
+                    </div>
+                    <p class="text-[11px] text-stone-400 mb-4">The photo shown for each style when customers open Nail Sets or Lash Sets.</p>
+
+                    <h4 class="text-[11px] uppercase tracking-widest text-stone-400 mb-2">Nails</h4>
+                    <div id="adminStyleNailsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6"></div>
+
+                    <h4 class="text-[11px] uppercase tracking-widest text-stone-400 mb-2">Lash Extensions</h4>
+                    <div id="adminStyleLashesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+                </div>
+
                 <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-serif text-2xl text-stone-900">Nails Collection</h3>
+                        <h3 class="font-serif text-2xl text-stone-900">Nails Hero Slideshow</h3>
                         <span id="nailsCount" class="text-xs bg-stone-100 text-stone-600 px-3 py-1 rounded-full">0 styles</span>
                     </div>
                     <div id="adminNailsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
@@ -109,7 +125,7 @@
 
                 <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-serif text-2xl text-stone-900">Lashes Collection</h3>
+                        <h3 class="font-serif text-2xl text-stone-900">Lashes Hero Slideshow</h3>
                         <span id="lashesCount" class="text-xs bg-stone-100 text-stone-600 px-3 py-1 rounded-full">0 styles</span>
                     </div>
                     <div id="adminLashesGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>

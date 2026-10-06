@@ -50,8 +50,8 @@ function getAdminData() {
 function renderAdminDashboard() {
     const { nails, lashes, training } = getAdminData();
 
-    document.getElementById('nailsCount').textContent = `${nails.length} styles`;
-    document.getElementById('lashesCount').textContent = `${lashes.length} styles`;
+    document.getElementById('nailsCount').textContent = `${nails.length} images`;
+    document.getElementById('lashesCount').textContent = `${lashes.length} images`;
     document.getElementById('trainingCount').textContent = `${training.length} images`;
 
     const renderCard = (item, index, category) => `
@@ -72,6 +72,101 @@ function renderAdminDashboard() {
     document.getElementById('adminNailsGrid').innerHTML = nails.map((item, idx) => renderCard(item, idx, 'Nails')).join('');
     document.getElementById('adminLashesGrid').innerHTML = lashes.map((item, idx) => renderCard(item, idx, 'Lashes')).join('');
     document.getElementById('adminTrainingGrid').innerHTML = training.map((item, idx) => renderCard(item, idx, 'Training')).join('');
+
+    renderStylePhotos();
+}
+
+/* ===== Style photos (one photo per style) ===== */
+const STYLE_IMAGES_KEY = 'nailz_style_images';
+const STYLE_LIST = {
+    nails: ["Acrylic Nails", "Stick-on Nails", "Gel-X Nails"],
+    lashes: ["Classic Cat Eye Lashes", "Hybrid Cat Eye Lashes", "Volume Cat Eye Lashes", "Hybrid Wispy Lashes", "Volume Wispy Lashes", "Wet Set Lashes"]
+};
+const ALL_STYLES = [...STYLE_LIST.nails, ...STYLE_LIST.lashes];
+
+function getStyleImages() {
+    try { return JSON.parse(localStorage.getItem(STYLE_IMAGES_KEY)) || {}; }
+    catch (e) { return {}; }
+}
+
+function saveStyleImage(styleName, url) {
+    const map = getStyleImages();
+    if (url) map[styleName] = url; else delete map[styleName];
+    localStorage.setItem(STYLE_IMAGES_KEY, JSON.stringify(map));
+    renderStylePhotos();
+}
+
+function renderStylePhotos() {
+    const map = getStyleImages();
+    const card = (name) => {
+        const idx = ALL_STYLES.indexOf(name);
+        const url = map[name];
+        return `
+        <div class="bg-stone-50 rounded-xl overflow-hidden border border-stone-200">
+            <div class="aspect-[4/3] bg-gradient-to-br from-rose-100 to-amber-50 flex items-center justify-center text-rose-300 text-3xl">
+                ${url ? `<img src="${url}" alt="${name}" class="w-full h-full object-cover">` : '<i class="fa-regular fa-image"></i>'}
+            </div>
+            <div class="p-3 space-y-2">
+                <h4 class="text-sm font-medium text-stone-900 truncate">${name}</h4>
+                <div class="flex items-center gap-1.5">
+                    <input type="file" accept="image/*" class="hidden" id="styleFile_${idx}" onchange="handleStyleFile(${idx}, this)">
+                    <label for="styleFile_${idx}" id="styleLabel_${idx}" class="flex-1 text-center cursor-pointer bg-stone-900 hover:bg-rose-600 text-white text-[10px] uppercase tracking-wider py-2 rounded-lg transition">${url ? 'Change photo' : 'Upload photo'}</label>
+                    <button type="button" onclick="setStyleUrl(${idx})" title="Paste image URL" class="w-8 h-8 bg-stone-200 hover:bg-stone-300 text-stone-700 rounded-lg text-xs transition"><i class="fa-solid fa-link"></i></button>
+                    ${url ? `<button type="button" onclick="removeStyleImage(${idx})" title="Remove photo" class="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xs transition"><i class="fa-solid fa-trash"></i></button>` : ''}
+                </div>
+            </div>
+        </div>`;
+    };
+
+    const nailsGrid = document.getElementById('adminStyleNailsGrid');
+    const lashesGrid = document.getElementById('adminStyleLashesGrid');
+    if (nailsGrid) nailsGrid.innerHTML = STYLE_LIST.nails.map(card).join('');
+    if (lashesGrid) lashesGrid.innerHTML = STYLE_LIST.lashes.map(card).join('');
+
+    const countEl = document.getElementById('stylePhotoCount');
+    if (countEl) countEl.textContent = `${ALL_STYLES.filter(n => map[n]).length} of ${ALL_STYLES.length} set`;
+}
+
+async function handleStyleFile(idx, input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const name = ALL_STYLES[idx];
+    const label = document.getElementById(`styleLabel_${idx}`);
+    if (label) label.textContent = 'Uploading...';
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_PRESET);
+
+    try {
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.secure_url) {
+            saveStyleImage(name, data.secure_url);
+        } else {
+            alert('Cloudinary upload failed. Check preset configuration.');
+            renderStylePhotos();
+        }
+    } catch (err) {
+        alert('Network error while uploading file.');
+        renderStylePhotos();
+    }
+}
+
+function setStyleUrl(idx) {
+    const name = ALL_STYLES[idx];
+    const url = prompt(`Paste an image URL for "${name}":`);
+    if (url && /^https?:\/\//i.test(url.trim())) {
+        saveStyleImage(name, url.trim());
+    } else if (url) {
+        alert('Please enter a valid link starting with http:// or https://');
+    }
+}
+
+function removeStyleImage(idx) {
+    const name = ALL_STYLES[idx];
+    if (!confirm(`Remove the photo for "${name}"?`)) return;
+    saveStyleImage(name, null);
 }
 
 async function handleAdminUpload(e) {

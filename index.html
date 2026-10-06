@@ -8,18 +8,18 @@
     <!-- Google Fonts & Tailwind -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-stone-50 text-stone-800 font-sans min-h-screen flex flex-col justify-between">
+<body class="nz-body text-stone-800 font-sans min-h-screen flex flex-col justify-between">
 
     <!-- Navigation Header -->
     <header class="bg-white/90 backdrop-blur-md border-b border-stone-200/60 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="index.html" class="brand-logo-nav">
-                <span class="brand-dark">Nailz</span><span class="brand-pink">by Helen</span>
+            <a href="index.html" class="nz-logo" aria-label="Nailz by Helen">
+                <span class="nz-logo-main">Nailz</span><span class="nz-logo-script">by Helen</span>
             </a>
 
             <!-- Desktop Nav -->
@@ -57,16 +57,16 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="hero" class="py-16 md:py-24 text-center px-4 bg-gradient-to-b from-stone-50 via-rose-50/30 to-stone-50">
+    <section id="hero" class="py-16 md:py-24 text-center px-4 hero-bg">
         <div class="max-w-4xl mx-auto space-y-4">
             <span class="text-xs uppercase tracking-widest text-rose-500 bg-rose-100/60 px-4 py-1.5 rounded-full font-semibold">
                 Luxury Beauty Experience
             </span>
-            <h1 class="brand-logo-large pt-2">
-                <span class="brand-dark">Nailz</span><span class="brand-pink">by Helen</span>
+            <h1 class="nz-logo nz-logo--large pt-2" aria-label="Nailz by Helen">
+                <span class="nz-logo-main">Nailz</span><span class="nz-logo-script">by Helen</span>
             </h1>
             <p class="text-stone-500 text-sm md:text-base max-w-lg mx-auto font-light leading-relaxed">
-                Understated, lightweight aesthetics with handcrafted precision. Click any card below to view full catalogues.
+                Understated, lightweight aesthetics with handcrafted precision. Tap a card below to browse our styles and book.
             </p>
         </div>
 
@@ -82,10 +82,10 @@
                 <div class="absolute bottom-6 left-6 right-6 text-left text-white flex justify-between items-end">
                     <div>
                         <span id="nails-count-badge" class="text-xs uppercase tracking-wider text-rose-200 font-medium">Signature Service</span>
-                        <h3 class="font-serif text-2xl font-semibold mt-0.5">Custom Nails & Extensions</h3>
+                        <h3 class="font-serif text-2xl font-semibold mt-0.5">Nail Sets</h3>
                     </div>
                     <span class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-xs font-medium border border-white/30 group-hover:bg-white group-hover:text-stone-900 transition duration-300">
-                        View Catalog <i class="fa-solid fa-arrow-right ml-1"></i>
+                        View Styles <i class="fa-solid fa-arrow-right ml-1"></i>
                     </span>
                 </div>
             </div>
@@ -99,10 +99,10 @@
                 <div class="absolute bottom-6 left-6 right-6 text-left text-white flex justify-between items-end">
                     <div>
                         <span id="lashes-count-badge" class="text-xs uppercase tracking-wider text-rose-200 font-medium">Eyelash Extensions</span>
-                        <h3 class="font-serif text-2xl font-semibold mt-0.5">Wispy & Natural Lash Sets</h3>
+                        <h3 class="font-serif text-2xl font-semibold mt-0.5">Lash Sets</h3>
                     </div>
                     <span class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-xs font-medium border border-white/30 group-hover:bg-white group-hover:text-stone-900 transition duration-300">
-                        View Catalog <i class="fa-solid fa-arrow-right ml-1"></i>
+                        View Styles <i class="fa-solid fa-arrow-right ml-1"></i>
                     </span>
                 </div>
             </div>
@@ -110,48 +110,90 @@
         </div>
     </section>
 
-    <!-- One-on-One Training Section -->
-    <section id="training" class="py-20 bg-stone-100/60 border-t border-stone-200">
+    <!-- Nail & Lash Training Section -->
+    <section id="training" class="py-20 training-bg">
         <div class="max-w-6xl mx-auto px-6">
             <div class="bg-white rounded-3xl border border-stone-200 shadow-xl p-8 md:p-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                
+
                 <!-- Left Details -->
                 <div class="space-y-6">
                     <span class="text-[11px] font-semibold uppercase tracking-widest text-rose-500 bg-rose-50 px-3.5 py-1.5 rounded-full border border-rose-100">
                         Masterclass & Mentorship
                     </span>
                     <h2 class="font-serif text-3xl md:text-4xl text-stone-900 leading-tight">
-                        Private One-on-One Nail Training
+                        Nail & Lash Training
                     </h2>
                     <p class="text-stone-500 text-sm leading-relaxed">
-                        Elevate your nail artistry with Helen's private intensive masterclass. Designed for aspiring technicians and experienced nail artists aiming to master modern nail techniques.
+                        Private one-on-one training with Helen for aspiring technicians and experienced artists. Choose the course that fits your level.
                     </p>
 
-                    <ul class="space-y-3 text-xs md:text-sm text-stone-700">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-stone-200 bg-stone-50 hover:border-rose-300 transition">
+                            <div>
+                                <h4 class="font-serif text-lg text-stone-900 font-medium leading-tight">Beginner Nail Course</h4>
+                                <p class="text-[11px] text-stone-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>1 month</p>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <span class="font-semibold text-stone-900 text-sm">GH₵ 1,800</span>
+                                <button onclick="openBookingModal('Beginner Nail Course')" class="bg-stone-900 hover:bg-rose-600 text-white text-[10px] uppercase tracking-widest px-3.5 py-2 rounded-lg transition">Enrol</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-stone-200 bg-stone-50 hover:border-rose-300 transition">
+                            <div>
+                                <h4 class="font-serif text-lg text-stone-900 font-medium leading-tight">Upgrade Nail Course</h4>
+                                <p class="text-[11px] text-stone-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>2 weeks</p>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <span class="font-semibold text-stone-900 text-sm">GH₵ 1,500</span>
+                                <button onclick="openBookingModal('Upgrade Nail Course')" class="bg-stone-900 hover:bg-rose-600 text-white text-[10px] uppercase tracking-widest px-3.5 py-2 rounded-lg transition">Enrol</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-stone-200 bg-stone-50 hover:border-rose-300 transition">
+                            <div>
+                                <h4 class="font-serif text-lg text-stone-900 font-medium leading-tight">Nails & Lashes Combined</h4>
+                                <p class="text-[11px] text-stone-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>2 months</p>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <span class="font-semibold text-stone-900 text-sm">GH₵ 3,000</span>
+                                <button onclick="openBookingModal('Nails & Lashes Combined')" class="bg-stone-900 hover:bg-rose-600 text-white text-[10px] uppercase tracking-widest px-3.5 py-2 rounded-lg transition">Enrol</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-stone-200 bg-stone-50 hover:border-rose-300 transition">
+                            <div>
+                                <h4 class="font-serif text-lg text-stone-900 font-medium leading-tight">Lash Extensions Course</h4>
+                                <p class="text-[11px] text-stone-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>3–4 weeks</p>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <span class="font-semibold text-stone-900 text-sm">GH₵ 1,200</span>
+                                <button onclick="openBookingModal('Lash Extensions Course')" class="bg-stone-900 hover:bg-rose-600 text-white text-[10px] uppercase tracking-widest px-3.5 py-2 rounded-lg transition">Enrol</button>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between gap-4 p-4 rounded-2xl border border-stone-200 bg-stone-50 hover:border-rose-300 transition">
+                            <div>
+                                <h4 class="font-serif text-lg text-stone-900 font-medium leading-tight">Upgrade Lash Course</h4>
+                                <p class="text-[11px] text-stone-500 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>2 weeks</p>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <span class="font-semibold text-stone-900 text-sm">GH₵ 1,000</span>
+                                <button onclick="openBookingModal('Upgrade Lash Course')" class="bg-stone-900 hover:bg-rose-600 text-white text-[10px] uppercase tracking-widest px-3.5 py-2 rounded-lg transition">Enrol</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="space-y-2 text-xs md:text-sm text-stone-700 pt-2">
                         <li class="flex items-center gap-3">
-                            <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span>
-                            Dry Manicure & Precise Cuticle Preparation
+                            <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center text-xs"><i class="fa-solid fa-award"></i></span>
+                            Certificate is awarded
                         </li>
                         <li class="flex items-center gap-3">
-                            <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span>
-                            Flawless Builder Gel, Apex Structuring & Extensions
+                            <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center text-xs"><i class="fa-solid fa-infinity"></i></span>
+                            Lifetime mentorship
                         </li>
                         <li class="flex items-center gap-3">
-                            <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span>
-                            Intensive Nail Art, Chrome & Encapsulation Techniques
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <span class="w-5 h-5 rounded-full bg-rose-100 text-rose-500 flex items-center justify-center text-xs"><i class="fa-solid fa-check"></i></span>
-                            Certificate of Completion & Professional Starter Kit Included
+                            <span class="w-5 h-5 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center text-xs"><i class="fa-solid fa-circle-info"></i></span>
+                            Payment made is non-refundable
                         </li>
                     </ul>
-
-                    <div class="pt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                        <button onclick="openBookingModal('One-on-One Nail Training')" class="bg-stone-900 hover:bg-rose-600 text-white text-xs uppercase tracking-widest px-6 py-3.5 rounded-xl transition shadow-md">
-                            Request Training Slot
-                        </button>
-                        <span class="text-xs text-stone-400">Limited slots available per month</span>
-                    </div>
                 </div>
 
                 <!-- Right Dynamic Image Showcase -->
@@ -170,7 +212,7 @@
     </section>
 
     <!-- Updated Contact Section (Minimalist Layout with Live Details) -->
-    <section id="contact" class="py-20 bg-amber-50/30 border-t border-stone-200 text-center">
+    <section id="contact" class="py-20 contact-bg text-center">
         <div class="max-w-6xl mx-auto px-6 space-y-12">
             
             <div class="space-y-2">
@@ -237,7 +279,7 @@
         <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl border border-stone-200">
             <div class="p-6 border-b border-stone-100 flex items-center justify-between">
                 <div>
-                    <h2 id="catalogModalTitle" class="font-serif text-2xl text-stone-900">Collection</h2>
+                    <h2 id="catalogModalTitle" class="font-serif text-2xl text-stone-900">Styles</h2>
                     <div class="flex items-center gap-2 mt-2">
                         <button id="tab-btn-nails" onclick="switchCatalogTab('nails')" class="px-4 py-1.5 rounded-full text-xs font-medium transition">Nails</button>
                         <button id="tab-btn-lashes" onclick="switchCatalogTab('lashes')" class="px-4 py-1.5 rounded-full text-xs font-medium transition">Lashes</button>
@@ -274,9 +316,26 @@
                 <div>
                     <label class="block text-xs uppercase tracking-wider text-stone-500 mb-1">Service Required</label>
                     <select id="bookService" required class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-rose-400 outline-none">
-                        <option value="Full Nail Extensions Set">Full Nail Extensions Set</option>
-                        <option value="Eyelash Extensions Set">Eyelash Extensions Set</option>
-                        <option value="One-on-One Nail Training">One-on-One Nail Training Masterclass</option>
+                        <optgroup label="Nails">
+                            <option value="Acrylic Nails">Acrylic Nails</option>
+                            <option value="Stick-on Nails">Stick-on Nails</option>
+                            <option value="Gel-X Nails">Gel-X Nails</option>
+                        </optgroup>
+                        <optgroup label="Lash Extensions">
+                            <option value="Classic Cat Eye Lashes">Classic Cat Eye Lashes</option>
+                            <option value="Hybrid Cat Eye Lashes">Hybrid Cat Eye Lashes</option>
+                            <option value="Volume Cat Eye Lashes">Volume Cat Eye Lashes</option>
+                            <option value="Hybrid Wispy Lashes">Hybrid Wispy Lashes</option>
+                            <option value="Volume Wispy Lashes">Volume Wispy Lashes</option>
+                            <option value="Wet Set Lashes">Wet Set Lashes</option>
+                        </optgroup>
+                        <optgroup label="Training">
+                        <option value="Beginner Nail Course">Beginner Nail Course (1 month, GH₵ 1,800)</option>
+                        <option value="Upgrade Nail Course">Upgrade Nail Course (2 weeks, GH₵ 1,500)</option>
+                        <option value="Nails & Lashes Combined">Nails & Lashes Combined (2 months, GH₵ 3,000)</option>
+                        <option value="Lash Extensions Course">Lash Extensions Course (3–4 weeks, GH₵ 1,200)</option>
+                        <option value="Upgrade Lash Course">Upgrade Lash Course (2 weeks, GH₵ 1,000)</option>
+                        </optgroup>
                         <option value="Nail & Lash Combo Package">Nail & Lash Combo Package</option>
                     </select>
                 </div>
@@ -287,7 +346,14 @@
                     </div>
                     <div>
                         <label class="block text-xs uppercase tracking-wider text-stone-500 mb-1">Preferred Time</label>
-                        <input type="time" id="bookTime" required class="w-full px-3 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-rose-400 outline-none">
+                        <select id="bookTime" required class="w-full px-3 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-rose-400 outline-none bg-white">
+                            <option value="" disabled selected>Select a time</option>
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="12:00 PM">12:00 PM</option>
+                            <option value="2:00 PM">2:00 PM</option>
+                            <option value="4:00 PM">4:00 PM</option>
+                            <option value="6:00 PM">6:00 PM</option>
+                        </select>
                     </div>
                 </div>
 
@@ -299,10 +365,10 @@
     </div>
 
     <!-- Footer Section -->
-    <footer class="bg-white border-t border-stone-200 py-10 mt-auto">
+    <footer class="footer-bg py-10 mt-auto">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-stone-500">
-            <a href="index.html" class="brand-logo-nav">
-                <span class="brand-dark">Nailz</span><span class="brand-pink">by Helen</span>
+            <a href="index.html" class="nz-logo nz-logo--light" aria-label="Nailz by Helen">
+                <span class="nz-logo-main">Nailz</span><span class="nz-logo-script">by Helen</span>
             </a>
             <p>© <span id="year"></span> Nailz by Helen. Designed for understated beauty.</p>
         </div>
