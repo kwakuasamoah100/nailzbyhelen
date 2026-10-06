@@ -13,69 +13,79 @@ body.nz-body {
     background: linear-gradient(180deg, #fdf7f3 0%, #fbeff1 50%, #f8eee6 100%) fixed;
 }
 
-/* ===== Updated Logo with Circular Frame Streaks ===== */
+/* ===== Updated Logo Styling ===== */
 .nz-logo-wrapper {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    line-height: 1;
 }
 
-/* Script Typography */
-.nz-logo-script-main {
+/* Compact Header & Footer Logo */
+header .nz-logo-wrapper,
+footer .nz-logo-wrapper {
+    padding: 0;
+}
+
+header .nz-logo-script-main,
+footer .nz-logo-script-main {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.15rem;
+    line-height: 1;
+}
+
+header .logo-word-black,
+footer .logo-word-black {
+    font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: 1.25rem;
+    color: #292524;
+    letter-spacing: -0.01em;
+}
+
+header .logo-word-script,
+footer .logo-word-script {
     font-family: 'Great Vibes', 'Alex Brush', cursive;
     font-weight: 400;
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
-    color: var(--nz-rose, #f285a2);
-    white-space: nowrap;
-    z-index: 2;
-    position: relative;
-    line-height: 1;
-    padding: 0 0.8rem;
+    font-size: 1.6rem;
+    color: #f285a2;
 }
 
-/* Round Streaks Ring Overlay */
-.nz-logo-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 120%;
-    height: 140%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.nz-logo-ring path {
-    stroke: var(--nz-rose, #f285a2);
-    fill: none;
-    stroke-linecap: round;
-}
-
-/* Large Hero Logo Variant */
+/* Hero Section Title — Matches Reference Image Layout */
 .nz-logo--large {
-    display: inline-flex;
-    margin: 0 auto;
+    display: inline-block;
+    margin: 1rem auto;
+    position: relative;
 }
 
-.nz-logo--large .nz-logo-script-main {
-    font-size: clamp(3.2rem, 10vw, 6rem);
-    padding: 0 1.5rem;
+.nz-logo--large .hero-title-container {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.25rem;
+    line-height: 1;
 }
 
-.nz-logo--large .nz-logo-ring {
-    width: 130%;
-    height: 160%;
+.nz-logo--large .logo-word-black {
+    font-family: 'Cormorant Garamond', 'Playfair Display', serif;
+    font-weight: 300;
+    font-size: clamp(3.2rem, 8.5vw, 6.2rem);
+    color: #292524;
+    letter-spacing: -0.02em;
 }
 
-/* Light / Dark Mode Adjustments */
-.nz-logo--light .nz-logo-script-main {
-    color: var(--nz-rose, #f285a2);
+.nz-logo--large .logo-word-script {
+    font-family: 'Great Vibes', 'Alex Brush', cursive;
+    font-weight: 400;
+    font-size: clamp(4.5rem, 12vw, 8.8rem);
+    color: #f285a2;
+    margin-left: -0.05em;
 }
 
-/* ===== Section backgrounds ===== */
+/* Section Backgrounds */
 .hero-bg {
     background:
         radial-gradient(1100px 480px at 12% 0%, rgba(242, 133, 162, 0.24), transparent 60%),
@@ -105,7 +115,7 @@ body.nz-body {
     color: #dcc3cc;
 }
 
-/* Custom scrollbar styling */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -120,7 +130,7 @@ body.nz-body {
     background: #F48B9B;
 }
 
-/* Modal fade animations */
+/* Modal Fade Animations */
 #catalogModal, #bookingModal {
     transition: opacity 0.3s ease-in-out;
 }
