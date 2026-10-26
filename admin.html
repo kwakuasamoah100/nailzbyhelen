@@ -58,7 +58,7 @@
             <!-- Upload Form -->
             <div class="lg:col-span-1 bg-white p-6 rounded-2xl border border-stone-200 shadow-sm h-fit">
                 <h2 class="font-serif text-xl text-stone-900 mb-1">Add Slideshow Image</h2>
-                <p class="text-[11px] text-stone-400 mb-4 pb-2 border-b border-stone-100">Rotating photos on the homepage cards and training section.</p>
+                <p class="text-[11px] text-stone-400 mb-4 pb-2 border-b border-stone-100">Photos listed below are exactly what is live on the website.</p>
                 
                 <form onsubmit="handleAdminUpload(event)" class="space-y-4">
                     <div>
@@ -76,19 +76,8 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs uppercase tracking-wider text-stone-500 mb-1">Upload Local Image File</label>
-                        <input type="file" id="uploadFile" accept="image/*" class="w-full text-xs text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-stone-100 file:text-stone-700 hover:file:bg-stone-200 cursor-pointer">
-                    </div>
-
-                    <div class="relative flex py-1 items-center">
-                        <div class="flex-grow border-t border-stone-200"></div>
-                        <span class="flex-shrink mx-3 text-[10px] text-stone-400 uppercase tracking-widest">or use URL</span>
-                        <div class="flex-grow border-t border-stone-200"></div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs uppercase tracking-wider text-stone-500 mb-1">Image Web URL</label>
-                        <input type="url" id="uploadUrl" placeholder="https://..." class="w-full px-4 py-2.5 rounded-xl border border-stone-200 text-sm focus:ring-2 focus:ring-stone-400 outline-none">
+                        <label class="block text-xs uppercase tracking-wider text-stone-500 mb-1">Choose Image</label>
+                        <input type="file" id="uploadFile" accept="image/*" required class="w-full text-xs text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-stone-100 file:text-stone-700 hover:file:bg-stone-200 cursor-pointer">
                     </div>
 
                     <button type="submit" id="submitBtn" class="w-full bg-stone-900 hover:bg-rose-600 text-white text-xs uppercase tracking-widest py-3 rounded-xl transition shadow flex justify-center items-center gap-2">
@@ -99,6 +88,7 @@
 
             <!-- Current Images Management Grid -->
             <div class="lg:col-span-2 space-y-6">
+                <p id="loadError" class="hidden text-sm bg-red-50 text-red-600 border border-red-200 rounded-xl p-4"></p>
 
                 <!-- Style Photos -->
                 <div class="bg-white p-6 rounded-2xl border border-rose-200 shadow-sm">

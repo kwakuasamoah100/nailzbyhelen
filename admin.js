@@ -93,12 +93,21 @@ async function deleteFromServer(publicId) {
 async function renderAdminDashboard() {
     try {
         const res = await fetch('/api/gallery', { cache: 'no-store' });
-        if (res.ok) {
-            const d = await res.json();
-            state = { nails: d.nails || [], lashes: d.lashes || [], training: d.training || [], styles: d.styles || {} };
-        }
-    } catch (e) { /* show whatever we have */ }
+        const d = await res.json();
+        if (!res.ok) throw new Error(d.error || ('Server error ' + res.status));
+        state = { nails: d.nails || [], lashes: d.lashes || [], training: d.training || [], styles: d.styles || {} };
+        showLoadError('');
+    } catch (e) {
+        showLoadError('Could not load the live gallery from the server: ' + e.message);
+    }
     drawDashboard();
+}
+
+function showLoadError(msg) {
+    const el = document.getElementById('loadError');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.toggle('hidden', !msg);
 }
 
 function drawDashboard() {
@@ -123,7 +132,7 @@ function drawDashboard() {
         </div>
     `;
 
-    const empty = '<p class="text-xs text-stone-400 col-span-full">No photos yet. The website shows default photos until you add some.</p>';
+    const empty = '<p class="text-xs text-stone-400 col-span-full">No photos yet. Nothing is showing on the website here until you add one.</p>';
     document.getElementById('adminNailsGrid').innerHTML = nails.map(i => renderCard(i, 'Nails')).join('') || empty;
     document.getElementById('adminLashesGrid').innerHTML = lashes.map(i => renderCard(i, 'Lashes')).join('') || empty;
     document.getElementById('adminTrainingGrid').innerHTML = training.map(i => renderCard(i, 'Training')).join('') || empty;
@@ -155,7 +164,6 @@ function renderStylePhotos() {
                 <div class="flex items-center gap-1.5">
                     <input type="file" accept="image/*" class="hidden" id="styleFile_${idx}" onchange="handleStyleFile(${idx}, this)">
                     <label for="styleFile_${idx}" id="styleLabel_${idx}" class="flex-1 text-center cursor-pointer bg-stone-900 hover:bg-rose-600 text-white text-[10px] uppercase tracking-wider py-2 rounded-lg transition">${url ? 'Change photo' : 'Upload photo'}</label>
-                    <button type="button" onclick="setStyleUrl(${idx})" title="Paste image URL" class="w-8 h-8 bg-stone-200 hover:bg-stone-300 text-stone-700 rounded-lg text-xs transition"><i class="fa-solid fa-link"></i></button>
                     ${url ? `<button type="button" onclick="removeStyleImage(${idx})" title="Remove photo" class="w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xs transition"><i class="fa-solid fa-trash"></i></button>` : ''}
                 </div>
             </div>
@@ -188,16 +196,6 @@ function handleStyleFile(idx, input) {
     uploadStyle(ALL_STYLES[idx], file, document.getElementById(`styleLabel_${idx}`));
 }
 
-function setStyleUrl(idx) {
-    const name = ALL_STYLES[idx];
-    const url = prompt(`Paste an image URL for "${name}":`);
-    if (url && /^https?:\/\//i.test(url.trim())) {
-        uploadStyle(name, url.trim(), document.getElementById(`styleLabel_${idx}`));
-    } else if (url) {
-        alert('Please enter a valid link starting with http:// or https://');
-    }
-}
-
 async function removeStyleImage(idx) {
     const name = ALL_STYLES[idx];
     if (!confirm(`Remove the photo for "${name}"?`)) return;
@@ -212,13 +210,12 @@ async function handleAdminUpload(e) {
     e.preventDefault();
     const category = document.getElementById('uploadCategory').value;
     const title = document.getElementById('uploadTitle').value.trim();
-    const urlInput = document.getElementById('uploadUrl').value.trim();
     const fileInput = document.getElementById('uploadFile');
     const submitBtn = document.getElementById('submitBtn');
 
-    const source = fileInput.files.length > 0 ? fileInput.files[0] : urlInput;
+    const source = fileInput.files.length > 0 ? fileInput.files[0] : null;
     if (!source) {
-        alert('Please select an image file to upload OR provide an Image URL.');
+        alert('Please choose an image file to upload.');
         return;
     }
 
@@ -231,7 +228,6 @@ async function handleAdminUpload(e) {
         state[key].unshift({ id: data.public_id, title, category, url: data.secure_url });
 
         document.getElementById('uploadTitle').value = '';
-        document.getElementById('uploadUrl').value = '';
         fileInput.value = '';
         drawDashboard();
         alert(`Successfully published new ${category} image! It will appear on all devices within a minute.`);

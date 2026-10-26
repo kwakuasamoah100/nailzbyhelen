@@ -32,6 +32,6 @@ module.exports = async (req, res) => {
         res.setHeader('Cache-Control', 'no-store');
         res.status(200).json(out);
     } catch (e) {
-        res.status(500).json({ error: 'Could not load gallery' });
+        res.status(500).json({ error: 'Could not load gallery (' + e.message + '). Check CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET in Vercel.' });
     }
 };

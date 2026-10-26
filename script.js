@@ -1,22 +1,6 @@
-const defaultNails = [
-    { title: "Vanilla Nude Chrome Set", category: "Nails", url: "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=800" },
-    { title: "Blush Pink French Tip", category: "Nails", url: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&q=80&w=800" },
-    { title: "Luxury Minimalist Sculpt", category: "Nails", url: "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&q=80&w=800" }
-];
-
-const defaultLashes = [
-    { title: "Soft Volume Lash Set", category: "Lashes", url: "https://images.unsplash.com/photo-1583001809873-a1284d563372?auto=format&fit=crop&q=80&w=800" },
-    { title: "Hybrid Wispy Extensions", category: "Lashes", url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=800" },
-    { title: "Natural Classic Extensions", category: "Lashes", url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=800" }
-];
-
-const defaultTraining = [
-    { title: "Nail Extensions & Apex Class", category: "Training", url: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&q=80&w=800" },
-    { title: "Live Model Manicure Practice", category: "Training", url: "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=800" }
-];
-
 // Shared gallery: fetched from the server so every device sees the same images.
-let galleryCache = { nails: defaultNails, lashes: defaultLashes, training: defaultTraining };
+let galleryCache = { nails: [], lashes: [], training: [] };
+let heroUpdaters = [];
 let styleImagesCache = {};
 
 function loadData() {
@@ -29,16 +13,17 @@ async function refreshGallery() {
         if (!res.ok) return;
         const d = await res.json();
         galleryCache = {
-            nails: d.nails && d.nails.length ? d.nails : defaultNails,
-            lashes: d.lashes && d.lashes.length ? d.lashes : defaultLashes,
-            training: d.training && d.training.length ? d.training : defaultTraining
+            nails: d.nails || [],
+            lashes: d.lashes || [],
+            training: d.training || []
         };
         styleImagesCache = {};
         Object.keys(d.styles || {}).forEach(k => { styleImagesCache[k] = d.styles[k].url; });
         updateBadges();
+        heroUpdaters.forEach(fn => fn());
         const modal = document.getElementById('catalogModal');
         if (modal && !modal.classList.contains('hidden')) renderCatalogGrid();
-    } catch (e) { /* keep showing what we have */ }
+    } catch (e) { console.error('Gallery load failed', e); }
 }
 
 const catalogStyles = {
@@ -105,6 +90,8 @@ function initHeroSlides() {
                 imgEl.style.opacity = '1';
                 nailsIndex = (nailsIndex + 1) % nails.length;
             }, 300);
+        } else if (imgEl) {
+            imgEl.style.opacity = '0';
         }
     };
 
@@ -118,6 +105,8 @@ function initHeroSlides() {
                 imgEl.style.opacity = '1';
                 lashesIndex = (lashesIndex + 1) % lashes.length;
             }, 300);
+        } else if (imgEl) {
+            imgEl.style.opacity = '0';
         }
     };
 
@@ -131,12 +120,12 @@ function initHeroSlides() {
                 imgEl.style.opacity = '1';
                 trainingIndex = (trainingIndex + 1) % training.length;
             }, 300);
+        } else if (imgEl) {
+            imgEl.style.opacity = '0';
         }
     };
 
-    updateNailsHero();
-    updateLashesHero();
-    updateTrainingHero();
+    heroUpdaters = [updateNailsHero, updateLashesHero, updateTrainingHero];
 
     setInterval(updateNailsHero, 4000);
     setInterval(updateLashesHero, 4500);
