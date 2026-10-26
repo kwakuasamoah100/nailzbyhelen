@@ -15,24 +15,30 @@ const defaultTraining = [
     { title: "Live Model Manicure Practice", category: "Training", url: "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=800" }
 ];
 
-function loadData() {
-    let nails = JSON.parse(localStorage.getItem('nailz_nails_data'));
-    let lashes = JSON.parse(localStorage.getItem('nailz_lashes_data'));
-    let training = JSON.parse(localStorage.getItem('nailz_training_data'));
+// Shared gallery: fetched from the server so every device sees the same images.
+let galleryCache = { nails: defaultNails, lashes: defaultLashes, training: defaultTraining };
+let styleImagesCache = {};
 
-    if (!nails || nails.length === 0) {
-        localStorage.setItem('nailz_nails_data', JSON.stringify(defaultNails));
-        nails = defaultNails;
-    }
-    if (!lashes || lashes.length === 0) {
-        localStorage.setItem('nailz_lashes_data', JSON.stringify(defaultLashes));
-        lashes = defaultLashes;
-    }
-    if (!training || training.length === 0) {
-        localStorage.setItem('nailz_training_data', JSON.stringify(defaultTraining));
-        training = defaultTraining;
-    }
-    return { nails, lashes, training };
+function loadData() {
+    return galleryCache;
+}
+
+async function refreshGallery() {
+    try {
+        const res = await fetch('/api/gallery', { cache: 'no-store' });
+        if (!res.ok) return;
+        const d = await res.json();
+        galleryCache = {
+            nails: d.nails && d.nails.length ? d.nails : defaultNails,
+            lashes: d.lashes && d.lashes.length ? d.lashes : defaultLashes,
+            training: d.training && d.training.length ? d.training : defaultTraining
+        };
+        styleImagesCache = {};
+        Object.keys(d.styles || {}).forEach(k => { styleImagesCache[k] = d.styles[k].url; });
+        updateBadges();
+        const modal = document.getElementById('catalogModal');
+        if (modal && !modal.classList.contains('hidden')) renderCatalogGrid();
+    } catch (e) { /* keep showing what we have */ }
 }
 
 const catalogStyles = {
@@ -52,8 +58,7 @@ const catalogStyles = {
 };
 
 function getStyleImages() {
-    try { return JSON.parse(localStorage.getItem('nailz_style_images')) || {}; }
-    catch (e) { return {}; }
+    return styleImagesCache;
 }
 
 function optimizeImg(url) {
@@ -79,6 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initHeroSlides();
     updateBadges();
+    refreshGallery();
+    setInterval(refreshGallery, 60000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshGallery(); });
 });
 
 function toggleMobileNav() {
@@ -93,7 +101,7 @@ function initHeroSlides() {
         if (imgEl && nails.length > 0) {
             imgEl.style.opacity = '0.4';
             setTimeout(() => {
-                imgEl.src = nails[nailsIndex % nails.length].url;
+                imgEl.src = optimizeImg(nails[nailsIndex % nails.length].url);
                 imgEl.style.opacity = '1';
                 nailsIndex = (nailsIndex + 1) % nails.length;
             }, 300);
@@ -106,7 +114,7 @@ function initHeroSlides() {
         if (imgEl && lashes.length > 0) {
             imgEl.style.opacity = '0.4';
             setTimeout(() => {
-                imgEl.src = lashes[lashesIndex % lashes.length].url;
+                imgEl.src = optimizeImg(lashes[lashesIndex % lashes.length].url);
                 imgEl.style.opacity = '1';
                 lashesIndex = (lashesIndex + 1) % lashes.length;
             }, 300);
@@ -119,7 +127,7 @@ function initHeroSlides() {
         if (imgEl && training.length > 0) {
             imgEl.style.opacity = '0.4';
             setTimeout(() => {
-                imgEl.src = training[trainingIndex % training.length].url;
+                imgEl.src = optimizeImg(training[trainingIndex % training.length].url);
                 imgEl.style.opacity = '1';
                 trainingIndex = (trainingIndex + 1) % training.length;
             }, 300);
@@ -257,13 +265,3 @@ function handleBookingSubmit(event) {
     alert(`Thank you, ${name}! Your booking request for ${service} on ${date} at ${time} has been prepared. Please click send in WhatsApp to finalize with Helen.`);
     closeBookingModal();
 }
-
-// Live update listener across tabs
-window.addEventListener('storage', (e) => {
-    if (['nailz_nails_data', 'nailz_lashes_data', 'nailz_training_data', 'nailz_style_images'].includes(e.key)) {
-        updateBadges();
-        if (!document.getElementById('catalogModal').classList.contains('hidden')) {
-            renderCatalogGrid();
-        }
-    }
-});

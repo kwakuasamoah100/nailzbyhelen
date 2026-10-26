@@ -24,6 +24,7 @@ async function verifyAdminPasscode(e) {
 
         if (response.ok && data.success) {
             sessionStorage.setItem('nailz_admin_authed', 'true');
+            sessionStorage.setItem('nailz_admin_pass', input);
             document.getElementById('authOverlay').classList.add('hidden');
             errorEl.classList.add('hidden');
             renderAdminDashboard();
@@ -37,77 +38,120 @@ async function verifyAdminPasscode(e) {
 
 function lockPortal() {
     sessionStorage.removeItem('nailz_admin_authed');
+    sessionStorage.removeItem('nailz_admin_pass');
     location.reload();
 }
 
-function getAdminData() {
-    const nails = JSON.parse(localStorage.getItem('nailz_nails_data')) || [];
-    const lashes = JSON.parse(localStorage.getItem('nailz_lashes_data')) || [];
-    const training = JSON.parse(localStorage.getItem('nailz_training_data')) || [];
-    return { nails, lashes, training };
-}
-
-function renderAdminDashboard() {
-    const { nails, lashes, training } = getAdminData();
-
-    document.getElementById('nailsCount').textContent = `${nails.length} images`;
-    document.getElementById('lashesCount').textContent = `${lashes.length} images`;
-    document.getElementById('trainingCount').textContent = `${training.length} images`;
-
-    const renderCard = (item, index, category) => `
-        <div class="bg-stone-50 rounded-xl overflow-hidden border border-stone-200 relative group">
-            <div class="aspect-square bg-stone-200">
-                <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
-            </div>
-            <div class="p-3">
-                <h4 class="text-sm font-medium text-stone-900 truncate">${item.title}</h4>
-                <p class="text-[10px] text-stone-400 mt-0.5">${category}</p>
-            </div>
-            <button onclick="deleteAdminImage('${category}', ${index})" class="absolute top-2 right-2 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs shadow transition">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        </div>
-    `;
-
-    document.getElementById('adminNailsGrid').innerHTML = nails.map((item, idx) => renderCard(item, idx, 'Nails')).join('');
-    document.getElementById('adminLashesGrid').innerHTML = lashes.map((item, idx) => renderCard(item, idx, 'Lashes')).join('');
-    document.getElementById('adminTrainingGrid').innerHTML = training.map((item, idx) => renderCard(item, idx, 'Training')).join('');
-
-    renderStylePhotos();
-}
-
-/* ===== Style photos (one photo per style) ===== */
-const STYLE_IMAGES_KEY = 'nailz_style_images';
+/* ===== Shared gallery (stored in Cloudinary, served by /api/gallery) ===== */
 const STYLE_LIST = {
     nails: ["Acrylic Nails", "Stick-on Nails", "Gel-X Nails"],
     lashes: ["Classic Cat Eye Lashes", "Hybrid Cat Eye Lashes", "Volume Cat Eye Lashes", "Hybrid Wispy Lashes", "Volume Wispy Lashes", "Wet Set Lashes"]
 };
 const ALL_STYLES = [...STYLE_LIST.nails, ...STYLE_LIST.lashes];
+const CATEGORY_TAG = { Nails: 'nailz_nails', Lashes: 'nailz_lashes', Training: 'nailz_training' };
 
-function getStyleImages() {
-    try { return JSON.parse(localStorage.getItem(STYLE_IMAGES_KEY)) || {}; }
-    catch (e) { return {}; }
+let state = { nails: [], lashes: [], training: [], styles: {} };
+
+function esc(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-function saveStyleImage(styleName, url) {
-    const map = getStyleImages();
-    if (url) map[styleName] = url; else delete map[styleName];
-    localStorage.setItem(STYLE_IMAGES_KEY, JSON.stringify(map));
+function ctxSafe(v) {
+    return String(v).replace(/[|=]/g, ' ');
+}
+
+async function cloudUpload(fileOrUrl, tags, context) {
+    const fd = new FormData();
+    fd.append('file', fileOrUrl);
+    fd.append('upload_preset', CLOUDINARY_PRESET);
+    fd.append('tags', tags.join(','));
+    fd.append('context', context);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!data.secure_url) throw new Error((data.error && data.error.message) || 'Upload failed');
+    return data;
+}
+
+async function deleteFromServer(publicId) {
+    const res = await fetch('/api/delete-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passcode: sessionStorage.getItem('nailz_admin_pass') || '', public_id: publicId })
+    });
+    if (res.status === 401) {
+        alert('Session expired. Please unlock the portal again.');
+        lockPortal();
+        return false;
+    }
+    if (!res.ok) {
+        alert('Could not delete the image. Please try again.');
+        return false;
+    }
+    return true;
+}
+
+async function renderAdminDashboard() {
+    try {
+        const res = await fetch('/api/gallery', { cache: 'no-store' });
+        if (res.ok) {
+            const d = await res.json();
+            state = { nails: d.nails || [], lashes: d.lashes || [], training: d.training || [], styles: d.styles || {} };
+        }
+    } catch (e) { /* show whatever we have */ }
+    drawDashboard();
+}
+
+function drawDashboard() {
+    const { nails, lashes, training } = state;
+
+    document.getElementById('nailsCount').textContent = `${nails.length} images`;
+    document.getElementById('lashesCount').textContent = `${lashes.length} images`;
+    document.getElementById('trainingCount').textContent = `${training.length} images`;
+
+    const renderCard = (item, category) => `
+        <div class="bg-stone-50 rounded-xl overflow-hidden border border-stone-200 relative group">
+            <div class="aspect-square bg-stone-200">
+                <img src="${esc(item.url)}" alt="${esc(item.title)}" class="w-full h-full object-cover">
+            </div>
+            <div class="p-3">
+                <h4 class="text-sm font-medium text-stone-900 truncate">${esc(item.title)}</h4>
+                <p class="text-[10px] text-stone-400 mt-0.5">${category}</p>
+            </div>
+            <button onclick="deleteAdminImage('${category}', '${esc(item.id)}')" class="absolute top-2 right-2 w-7 h-7 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs shadow transition">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+    const empty = '<p class="text-xs text-stone-400 col-span-full">No photos yet. The website shows default photos until you add some.</p>';
+    document.getElementById('adminNailsGrid').innerHTML = nails.map(i => renderCard(i, 'Nails')).join('') || empty;
+    document.getElementById('adminLashesGrid').innerHTML = lashes.map(i => renderCard(i, 'Lashes')).join('') || empty;
+    document.getElementById('adminTrainingGrid').innerHTML = training.map(i => renderCard(i, 'Training')).join('') || empty;
+
     renderStylePhotos();
 }
 
+/* ===== Style photos (one photo per style) ===== */
+async function saveStyleImage(styleName, url, publicId) {
+    const old = state.styles[styleName];
+    if (url) state.styles[styleName] = { id: publicId, url };
+    else delete state.styles[styleName];
+    renderStylePhotos();
+    if (old && old.id && old.id !== publicId) await deleteFromServer(old.id);
+}
+
 function renderStylePhotos() {
-    const map = getStyleImages();
+    const map = state.styles;
     const card = (name) => {
         const idx = ALL_STYLES.indexOf(name);
-        const url = map[name];
+        const url = map[name] && map[name].url;
         return `
         <div class="bg-stone-50 rounded-xl overflow-hidden border border-stone-200">
             <div class="aspect-[4/3] bg-gradient-to-br from-rose-100 to-amber-50 flex items-center justify-center text-rose-300 text-3xl">
-                ${url ? `<img src="${url}" alt="${name}" class="w-full h-full object-cover">` : '<i class="fa-regular fa-image"></i>'}
+                ${url ? `<img src="${esc(url)}" alt="${esc(name)}" class="w-full h-full object-cover">` : '<i class="fa-regular fa-image"></i>'}
             </div>
             <div class="p-3 space-y-2">
-                <h4 class="text-sm font-medium text-stone-900 truncate">${name}</h4>
+                <h4 class="text-sm font-medium text-stone-900 truncate">${esc(name)}</h4>
                 <div class="flex items-center gap-1.5">
                     <input type="file" accept="image/*" class="hidden" id="styleFile_${idx}" onchange="handleStyleFile(${idx}, this)">
                     <label for="styleFile_${idx}" id="styleLabel_${idx}" class="flex-1 text-center cursor-pointer bg-stone-900 hover:bg-rose-600 text-white text-[10px] uppercase tracking-wider py-2 rounded-lg transition">${url ? 'Change photo' : 'Upload photo'}</label>
@@ -127,48 +171,43 @@ function renderStylePhotos() {
     if (countEl) countEl.textContent = `${ALL_STYLES.filter(n => map[n]).length} of ${ALL_STYLES.length} set`;
 }
 
-async function handleStyleFile(idx, input) {
-    const file = input.files && input.files[0];
-    if (!file) return;
-    const name = ALL_STYLES[idx];
-    const label = document.getElementById(`styleLabel_${idx}`);
-    if (label) label.textContent = 'Uploading...';
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', CLOUDINARY_PRESET);
-
+async function uploadStyle(name, fileOrUrl, labelEl) {
+    if (labelEl) labelEl.textContent = 'Uploading...';
     try {
-        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: formData });
-        const data = await res.json();
-        if (data.secure_url) {
-            saveStyleImage(name, data.secure_url);
-        } else {
-            alert('Cloudinary upload failed. Check preset configuration.');
-            renderStylePhotos();
-        }
+        const data = await cloudUpload(fileOrUrl, ['nailz_site', 'nailz_style'], `style=${ctxSafe(name)}`);
+        await saveStyleImage(name, data.secure_url, data.public_id);
     } catch (err) {
-        alert('Network error while uploading file.');
+        alert('Upload failed: ' + err.message);
         renderStylePhotos();
     }
+}
+
+function handleStyleFile(idx, input) {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    uploadStyle(ALL_STYLES[idx], file, document.getElementById(`styleLabel_${idx}`));
 }
 
 function setStyleUrl(idx) {
     const name = ALL_STYLES[idx];
     const url = prompt(`Paste an image URL for "${name}":`);
     if (url && /^https?:\/\//i.test(url.trim())) {
-        saveStyleImage(name, url.trim());
+        uploadStyle(name, url.trim(), document.getElementById(`styleLabel_${idx}`));
     } else if (url) {
         alert('Please enter a valid link starting with http:// or https://');
     }
 }
 
-function removeStyleImage(idx) {
+async function removeStyleImage(idx) {
     const name = ALL_STYLES[idx];
     if (!confirm(`Remove the photo for "${name}"?`)) return;
-    saveStyleImage(name, null);
+    const entry = state.styles[name];
+    if (entry && entry.id && await deleteFromServer(entry.id)) {
+        await saveStyleImage(name, null);
+    }
 }
 
+/* ===== Hero / training slideshow images ===== */
 async function handleAdminUpload(e) {
     e.preventDefault();
     const category = document.getElementById('uploadCategory').value;
@@ -177,76 +216,37 @@ async function handleAdminUpload(e) {
     const fileInput = document.getElementById('uploadFile');
     const submitBtn = document.getElementById('submitBtn');
 
-    let finalImageUrl = urlInput;
-
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', CLOUDINARY_PRESET);
-
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Uploading Image...`;
-
-        try {
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
-                method: 'POST',
-                body: formData
-            });
-
-            const data = await res.json();
-            if (data.secure_url) {
-                finalImageUrl = data.secure_url;
-            } else {
-                alert('Cloudinary upload failed. Check preset configuration.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = `<span>Publish to Website</span>`;
-                return;
-            }
-        } catch (err) {
-            alert('Network error while uploading file.');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = `<span>Publish to Website</span>`;
-            return;
-        }
-    }
-
-    if (!finalImageUrl) {
+    const source = fileInput.files.length > 0 ? fileInput.files[0] : urlInput;
+    if (!source) {
         alert('Please select an image file to upload OR provide an Image URL.');
         return;
     }
 
-    let storageKey = 'nailz_nails_data';
-    if (category === 'Lashes') storageKey = 'nailz_lashes_data';
-    if (category === 'Training') storageKey = 'nailz_training_data';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Uploading Image...`;
 
-    let currentList = JSON.parse(localStorage.getItem(storageKey)) || [];
+    try {
+        const data = await cloudUpload(source, ['nailz_site', CATEGORY_TAG[category]], `title=${ctxSafe(title)}`);
+        const key = category.toLowerCase();
+        state[key].unshift({ id: data.public_id, title, category, url: data.secure_url });
 
-    currentList.unshift({ title, category, url: finalImageUrl });
-    localStorage.setItem(storageKey, JSON.stringify(currentList));
-
-    document.getElementById('uploadTitle').value = '';
-    document.getElementById('uploadUrl').value = '';
-    fileInput.value = '';
-
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = `<span>Publish to Website</span>`;
-
-    renderAdminDashboard();
-    alert(`Successfully published new ${category} image!`);
+        document.getElementById('uploadTitle').value = '';
+        document.getElementById('uploadUrl').value = '';
+        fileInput.value = '';
+        drawDashboard();
+        alert(`Successfully published new ${category} image! It will appear on all devices within a minute.`);
+    } catch (err) {
+        alert('Upload failed: ' + err.message);
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>Publish to Website</span>`;
+    }
 }
 
-function deleteAdminImage(category, index) {
+async function deleteAdminImage(category, publicId) {
     if (!confirm('Are you sure you want to remove this image?')) return;
-
-    let storageKey = 'nailz_nails_data';
-    if (category === 'Lashes') storageKey = 'nailz_lashes_data';
-    if (category === 'Training') storageKey = 'nailz_training_data';
-
-    let currentList = JSON.parse(localStorage.getItem(storageKey)) || [];
-
-    currentList.splice(index, 1);
-    localStorage.setItem(storageKey, JSON.stringify(currentList));
-
-    renderAdminDashboard();
+    if (!(await deleteFromServer(publicId))) return;
+    const key = category.toLowerCase();
+    state[key] = state[key].filter(i => i.id !== publicId);
+    drawDashboard();
 }
