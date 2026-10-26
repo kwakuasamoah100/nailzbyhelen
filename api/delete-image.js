@@ -1,5 +1,5 @@
 // POST /api/delete-image  { passcode, public_id }  -> admin only.
-const CLOUD = process.env.CLOUDINARY_CLOUD_NAME || 'uropsnyi';
+const CLOUD = (process.env.CLOUDINARY_CLOUD_NAME || 'uropsnyi').trim();
 
 module.exports = async (req, res) => {
     if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
     if (!public_id) return res.status(400).json({ error: 'Missing public_id' });
 
     try {
-        const auth = Buffer.from(`${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}`).toString('base64');
+        const auth = Buffer.from(`${(process.env.CLOUDINARY_API_KEY || '').trim()}:${(process.env.CLOUDINARY_API_SECRET || '').trim()}`).toString('base64');
         const params = new URLSearchParams();
         params.append('public_ids[]', public_id);
         params.append('invalidate', 'true');
